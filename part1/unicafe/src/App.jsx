@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Buttons from "./buttons";
-import Statistics from "./statistics";
+import StatisticsLine from "./statistics";
 
 const App = ()=>{
 
@@ -44,12 +44,12 @@ const App = ()=>{
 
             {!all?<h4>No feedback given</h4>:
                 <>
-                    <Statistics feedback={"good"} clicks={good}/>
-                    <Statistics feedback={"neutral"} clicks={neutral}/>
-                    <Statistics feedback={"bad"} clicks={bad}/>
-                    <Statistics feedback={"all"} clicks={all}/>
-                    <Statistics feedback={"average"} clicks={average}/>
-                    <Statistics feedback={"positive"} clicks={positive}/>
+                    <StatisticsLine text={"good"} value={good}/>
+                    <StatisticsLine text={"neutral"} value={neutral}/>
+                    <StatisticsLine text={"bad"} value={bad}/>
+                    <StatisticsLine text={"all"} value={all}/>
+                    <StatisticsLine text={"average"} value={average}/>
+                    <StatisticsLine text={"positive"} value={positive}/>
                 </>
             }
 

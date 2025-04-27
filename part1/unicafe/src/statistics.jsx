@@ -1,8 +1,8 @@
-const Statistics = ({feedback,clicks})=>{  
+const StatisticsLine = ({text,value})=>{  
 
     return(
-        <p>{feedback} {clicks}</p>
+        <p>{text} {value}</p>
     )
 }
 
-export default Statistics
+export default StatisticsLine
