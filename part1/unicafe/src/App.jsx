@@ -11,6 +11,7 @@ const App = ()=>{
     const [all,setAll] = useState(0)
     const [positive, setPositive] = useState(0);
     const [anecdote, setAnecdote] = useState(0);
+    const [votes,setVotes] = useState({})
     const anecdotes = [
         'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -45,10 +46,18 @@ const App = ()=>{
     const changeAnecdote = ()=>{
         setAnecdote(Math.floor(Math.random()*anecdotes.length))
     }
+ 
+    const anecdoteVote = ()=>{
+        setVotes({...votes, [anecdote]:!votes[anecdote]?1:votes[anecdote]+1})
+    }
 
+ 
     return(
         <div>
             <p>{anecdotes[anecdote]}</p>
+            <p>has {!votes[anecdote]?'0':votes[anecdote]} votes</p>
+            <Buttons text={"vote"} onClick={anecdoteVote}/>
+
             <Buttons text={"next anecdotes"} onClick={changeAnecdote}/>
 
             <h1>give Feedback</h1>
