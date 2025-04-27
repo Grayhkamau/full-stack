@@ -41,12 +41,17 @@ const App = ()=>{
             <Buttons text={"bad"} onClick={handleBadClick}/>
 
             <h1>Statistics</h1>
-            <Statistics feedback={"good"} clicks={good}/>
-            <Statistics feedback={"neutral"} clicks={neutral}/>
-            <Statistics feedback={"bad"} clicks={bad}/>
-            <Statistics feedback={"all"} clicks={all}/>
-            <Statistics feedback={"average"} clicks={average}/>
-            <Statistics feedback={"positive"} clicks={positive}/>
+
+            {!all?<h4>No feedback given</h4>:
+                <>
+                    <Statistics feedback={"good"} clicks={good}/>
+                    <Statistics feedback={"neutral"} clicks={neutral}/>
+                    <Statistics feedback={"bad"} clicks={bad}/>
+                    <Statistics feedback={"all"} clicks={all}/>
+                    <Statistics feedback={"average"} clicks={average}/>
+                    <Statistics feedback={"positive"} clicks={positive}/>
+                </>
+            }
 
         </div>
     )

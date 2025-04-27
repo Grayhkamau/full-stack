@@ -1,4 +1,4 @@
-import Part from "./part.jsx";
+import Part from ".Part.jsx";
 const Content = ({parts}) => {
     return(
         parts.map(({name,exercises},index)=>{

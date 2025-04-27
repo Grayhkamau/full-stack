@@ -1,4 +1,5 @@
-const Statistics = ({feedback,clicks})=>{   
+const Statistics = ({feedback,clicks})=>{  
+
     return(
         <p>{feedback} {clicks}</p>
     )
