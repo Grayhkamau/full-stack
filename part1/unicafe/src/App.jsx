@@ -44,6 +44,7 @@ const App = ()=>{
 
             {!all?<h4>No feedback given</h4>:
                 <>
+                
                     <StatisticsLine text={"good"} value={good}/>
                     <StatisticsLine text={"neutral"} value={neutral}/>
                     <StatisticsLine text={"bad"} value={bad}/>
