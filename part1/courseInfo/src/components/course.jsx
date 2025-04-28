@@ -1,26 +1,26 @@
 const Course = ({course})=>{
-    let totalExercises = course.parts.reduce((accumulator,currentValue)=>{
-        console.log("loop");
-        
-        return accumulator+currentValue.exercises;
-
-    },0);
-    console.log(totalExercises,"total")
+    let courseAndExcercisesArray = []
+   course.forEach(course => {
+        let selectCourse = {name:course.name, exercises:""};
+        selectCourse.exercises = course.parts.reduce((accumulator, currentValue)=>{
+            return accumulator+currentValue.exercises;
+        },0);
+        courseAndExcercisesArray.push(selectCourse)
+   });
+   console.log(courseAndExcercisesArray,'excercises array')
     return(
         <div>
-            <h1>{course.name}</h1>
-            {
-                course.parts.map(part=>{
-                    
-                    return(
-                        <div key={part.id}>
-                            <p>{part.name} {part.exercises}</p>
-                        </div>
-                    )
-                   
-                })
-            }
-            <p><b>Total of {totalExercises} exercises</b></p>
+            {course.map((course, index)=>{
+                return(
+                    <>
+                    <h1>{course.name}</h1>
+                    {course.parts.map((exercises)=>{
+                       return <p>{exercises.name}</p>
+                    })}
+                    <p><b>total of {courseAndExcercisesArray[index].exercises} exercises</b></p>
+                    </>
+                )
+            })}
         </div>
     )
 }
