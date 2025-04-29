@@ -6,31 +6,41 @@ const App=()=>{
   ])
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [filter, setFilter] = useState('');
+  const [filteredNames, setFilteredNames] = useState([])
 
   const handleNewName = (e)=>{
-    e.preventDefault();
-    if(!newName||!newNumber) return;
+      e.preventDefault();
+      if(!newName||!newNumber) return;
 
-    let exists = persons.findIndex(person=>{
-      return person.name===newName
-    })
+      let exists = persons.findIndex(person=>{
+        return person.name===newName
+      })
 
-
-    if(exists>=0) {
+      if(exists>=0) {
+        setNewName("")
+        return alert(`${newName} is already added to the phonebook`)
+      }
+      setPersons([...persons, {name:newName,number:newNumber}])
       setNewName("")
-      return alert(`${newName} is already added to the phonebook`)
-    }
-    console.log('reaching before')
-
-    setPersons([...persons, {name:newName,number:newNumber}])
-    setNewName("")
+      setNewNumber('')
   }
-  // console.log(persons)
- 
+  const handleFilter = (e)=>{
+    setFilter(e.target.value);
+    let personsFiltered = persons.filter((person)=>{
+      console.log(person.name.toLowerCase())
+      return person.name.toLowerCase().includes(e.target.value.toLowerCase())
+    })
+    console.log(personsFiltered)
+    setFilteredNames(personsFiltered);
+  }
+  let personsToBeShown = filteredNames.length?filteredNames:persons
   return(
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={(handleNewName)}>
+
+      <p>filter shown with <input value={filter} onChange={handleFilter} type="text"/></p>
+      <form onSubmit={(handleNewName)} >
         <div>
 
           name: <input 
@@ -50,7 +60,7 @@ const App=()=>{
         </div>
       </form>
       <h2>numbers</h2>
-      {persons.map((person,index)=>{
+      {personsToBeShown.map((person,index)=>{
         return <p key={index}>{person.name} {person.number}</p>
       })}
     </div>
