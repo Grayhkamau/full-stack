@@ -21,17 +21,28 @@ const App=()=>{
       if(!newName||!newNumber) return;
 
       let exists = persons.findIndex(person=>{
-        return person.name===newName
+        return person.name===newName 
       })
-
+   
       if(exists>=0) {
+        if(persons[exists].number!==newNumber){
+          if(!window.confirm(`${newName} is already added to the phonebook, replace the number with a new one?`)) return;
+            personServices.update(persons[exists].id, {name:newName,number:newNumber})
+            .then(updatedPerson=>{
+                setPersons(persons.map(person=>person.name===newName?updatedPerson:person))
+                setNewName("")
+                setNewNumber('')
+            })
+            return;
+        }
+       
         setNewName("")
+        setNewNumber('')
         return alert(`${newName} is already added to the phonebook`)
       }
       personServices.create({name:newName,number:newNumber})
-        .then(({name,number})=>{
-          console.log(name,number)
-          setPersons([...persons, {name,number}])
+        .then(({name,number,id})=>{
+          setPersons([...persons, {name,number, id}])
           setNewName("")
           setNewNumber('')
         })
@@ -46,6 +57,14 @@ const App=()=>{
     console.log(personsFiltered)
     setFilteredNames(personsFiltered);
   }
+
+  const handleDeleteUser = (id, name)=>{
+    if(!window.confirm(`delete ${name} ?`)) return;
+    personServices.deleteUser(id)
+    .then(personDeleted=>{
+      setPersons(persons.filter(person=>person.id!==personDeleted.id))
+    })
+  }
   let personsToBeShown = filteredNames.length?filteredNames:persons
   return(
     <div>
@@ -55,7 +74,7 @@ const App=()=>{
       <PersonForm handleNewName={handleNewName} setNewName={setNewName} newName={newName} setNewNumber={setNewNumber} newNumber={newNumber}/>
 
       <h2>numbers</h2>
-      <Persons personsToBeShown={personsToBeShown}/>
+      <Persons personsToBeShown={personsToBeShown} handleDeleteUser={handleDeleteUser}/>
     </div>
   )
 }
