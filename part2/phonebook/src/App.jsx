@@ -11,7 +11,7 @@ const App=()=>{
   const [filter, setFilter] = useState('');
   const [filteredNames, setFilteredNames] = useState([]);
   const [notification,setNotification] = useState('');
-
+  const [notificationType,setNotificationType] = useState('')
   useEffect(()=>{
     personServices.getAll()
     .then(persons=>setPersons(persons))
@@ -32,15 +32,21 @@ const App=()=>{
             .then(updatedPerson=>{
                 setPersons(persons.map(person=>person.name===newName?updatedPerson:person))
 
+                setNotificationType('success')
                 setNotification(`${newName}'s number has been changed to ${newNumber}`)
+                
 
-                setTimeout(() => {
-                  setNotification('')
-                }, 5000);
+                setTimeout(() => {setNotification('')}, 5000);
 
                 setNewName("")
 
                 setNewNumber('')
+            })
+            .catch(error=>{
+              setNotificationType('fail')
+              setNotification(`${newName} had already been removed from the server`);
+              setTimeout(() => {setNotification('')}, 5000);
+              setPersons(persons.filter(person=>person.name!==newName))
             })
             return;
         }
@@ -54,6 +60,7 @@ const App=()=>{
         .then(({name,number,id})=>{
           setPersons([...persons, {name,number, id}])
 
+          setNotificationType('success')
           setNotification(`${newName} with number ${newNumber} has been added to the phonebook`)
 
           setTimeout(() => {
@@ -87,7 +94,7 @@ const App=()=>{
   return(
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification}/>
+      <Notification message={notification} notificationType={notificationType}/>
       <Filter filter={filter} handleFilter={handleFilter}/>
 
       <PersonForm handleNewName={handleNewName} setNewName={setNewName} newName={newName} setNewNumber={setNewNumber} newNumber={newNumber}/>
