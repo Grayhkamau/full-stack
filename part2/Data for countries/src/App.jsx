@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import countryService from './services/countries';
+import weatherService from './services/weather';
+import Manycountries from "./components/manyCountries";
+import Country from "./components/country";
+import FilterForm from "./components/filterForm";
 
 const App = ()=>{
   const [country,setCountry] = useState('')
   const [responseCountries, setResponseCountries] = useState([])
   let [specificCountry,setSpecificCountry] = useState('');
   let [notification,setNotification] = useState('');
-
+  let [weather,setWeather] = useState('')
   useEffect(()=>{
       console.log('reaching effect')
 
       setNotification('')
-
+      setWeather('')
+      setSpecificCountry('')
+      setResponseCountries([])
       if(!country) return;
 
       countryService.getCountry(country)
@@ -20,7 +26,9 @@ const App = ()=>{
           console.log('searching specific country');
           setSpecificCountry(response)
           console.log('specific country response ', response);
-          
+          weatherService.getWeather(response.capital,response.altSpellings[0])
+          .then(weatherResponse=>{setWeather(weatherResponse)})
+          .catch(error=>{throw new Error(error.message)})
         })
       .catch(error=>{
         console.log('searching allcountries')
@@ -32,7 +40,16 @@ const App = ()=>{
             setNotification('');
             let matchingCountries = response.filter(currentCountry=>currentCountry.name.common.toLowerCase().includes(country))
 
-            matchingCountries.length===1?setSpecificCountry(matchingCountries[0]):setResponseCountries(matchingCountries.length>10?[]:matchingCountries);
+            if(matchingCountries.length===1){
+              setSpecificCountry(matchingCountries[0])
+              weatherService
+                      .getWeather(response.capital,response.altSpellings[0])
+                      .then(weatherResponse=>{setWeather(weatherResponse)})
+                      .catch(error=>{throw new Error(error.message)})
+            }
+            else{
+              setResponseCountries(matchingCountries.length>10?[]:matchingCountries);
+            }
             
             matchingCountries.length>10?setNotification('too many matches specify another filter!'):''
             
@@ -45,35 +62,21 @@ const App = ()=>{
 
   const handleChangeCountryFilter = (e)=>{
     setCountry(e.target.value)
-    setSpecificCountry('')
-    setResponseCountries([])
   }
   
   const handleShowCountry = (specificCountry)=>{
     setCountry(specificCountry)
   }
+  console.log('weather', weather)
   return(
     <div>
-      <p>Find countries   <input type="text" value={country} onChange={handleChangeCountryFilter}/></p> 
-      {notification?<p>{notification}</p>:''}
-      {!specificCountry&&responseCountries.map((country,index)=>{
-        return(
-          <p key={index}>{country.name.common} <button onClick={()=>handleShowCountry(country.name.common)}>show</button></p>
-        )
-      })}
-      {specificCountry&&
-        <div>
-          <h1>{specificCountry.name.common}</h1>  
-          <p>Capital {specificCountry.capital[0]}</p>
-          <p>Area {specificCountry.area}</p>
+      <FilterForm country={country}  handleChangeCountryFilter={handleChangeCountryFilter}/>
 
-          <h2>Languages</h2>
-          {Object.values(specificCountry.languages).map((lang,index)=>{
-            return(<p key={index}>{lang}</p>)
-          })}
-          <img src={specificCountry.flags.png}/>
-        </div>
-      }
+      {notification?<p>{notification}</p>:''}
+      
+      <Manycountries specificCountry={specificCountry} responseCountries={responseCountries} handleShowCountry={handleShowCountry}/>
+
+      <Country specificCountry={specificCountry} weather={weather}/>
     </div>
   )
 

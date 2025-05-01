@@ -12,4 +12,6 @@ const getALL = ()=>{
     return request.then(response=>response.data)
 }
 
+
+
 export default {getCountry, getALL}
