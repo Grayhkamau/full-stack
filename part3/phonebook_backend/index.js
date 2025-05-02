@@ -52,6 +52,20 @@ app.delete('/api/persons/:number',(req,res)=>{
 
 })
 
+app.post('/api/persons', (req,res)=>{
+    let body = req.body;
+
+    if(!body) return res.status(400).end();
+
+    let personObject = {
+        id:String(Math.floor(Math.random()*100)),
+        name:body.name,
+        number:body.number
+    }
+    persons = persons.concat(personObject)
+
+    res.status(200).json(personObject);
+})
 const PORT = 3001;
 app.listen(PORT,()=>{
     console.log(`app listening on port ${PORT}`)
