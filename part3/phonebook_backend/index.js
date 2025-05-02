@@ -1,8 +1,10 @@
 const express = require('express');
+const logger = require('morgan');
 
 const app = express();
 
 
+app.use(logger('tiny'))
 app.use(express.json());
 
 let persons = [
