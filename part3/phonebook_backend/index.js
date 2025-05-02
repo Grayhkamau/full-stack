@@ -55,7 +55,10 @@ app.delete('/api/persons/:number',(req,res)=>{
 app.post('/api/persons', (req,res)=>{
     let body = req.body;
 
-    if(!body) return res.status(400).end();
+    if(!body||!body?.name||!body?.number) return res.status(400).json({error:'name or number missing'});
+    let personExists = persons.find(person=>person.name===body.name)
+
+    if(personExists) return res.status(400).json({error:'name must be unique'});
 
     let personObject = {
         id:String(Math.floor(Math.random()*100)),
