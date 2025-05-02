@@ -4,8 +4,13 @@ const logger = require('morgan');
 const app = express();
 
 
-app.use(logger('tiny'))
 app.use(express.json());
+
+app.use(logger(':method :url :status :res[content-length] - :response-time ms :response'))
+
+logger.token('response',function(req,res){
+    return JSON.stringify(req.body)
+})
 
 let persons = [
     {
