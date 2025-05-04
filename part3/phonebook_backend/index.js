@@ -30,7 +30,9 @@ let persons = [
     }
 ]
 
-
+app.get('/', (req,res)=>{
+    res.send("<div>Hello from backend</div>")
+})
 app.get('/api/persons',(req,res)=>{
     res.json(persons)
 })
