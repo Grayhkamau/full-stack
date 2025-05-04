@@ -51,12 +51,12 @@ app.get('/api/persons/:id', (req,res)=>{
     res.json(person);
 })
 
-app.delete('/api/persons/:number',(req,res)=>{
-    const number = req.params.number
+app.delete('/api/persons/:id',(req,res)=>{
+    const id = req.params.id
     
-    persons = persons.filter(person=>person.number!==number);
+    persons = persons.filter(person=>person.id!==id);
 
-    res.status(204).end()
+    res.json({id}).status(200)
 
 })
 

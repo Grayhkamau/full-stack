@@ -12,6 +12,7 @@ const App=()=>{
   const [filteredNames, setFilteredNames] = useState([]);
   const [notification,setNotification] = useState('');
   const [notificationType,setNotificationType] = useState('')
+  
   useEffect(()=>{
     personServices.getAll()
     .then(persons=>setPersons(persons))
