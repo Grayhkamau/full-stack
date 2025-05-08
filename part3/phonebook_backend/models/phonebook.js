@@ -10,8 +10,8 @@ mongoose.connect(url)
 .catch((err)=>console.log('error ocurred', err.message))
 
 const phoneBookSchema = new mongoose.Schema({
-        name:'string',
-        number:'string'
+        name:String,
+        number:String
 })
 
 phoneBookSchema.set('toJSON',{
