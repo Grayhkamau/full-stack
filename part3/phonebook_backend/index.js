@@ -1,41 +1,28 @@
+require("dotenv").config();
 const express = require('express');
 const logger = require('morgan');
+const PhoneBookModel = require('./models/phonebook');
 
 const app = express();
-
 app.use(express.static("dist"));
-
 app.use(express.json());
-
 app.use(logger(':method :url :status :res[content-length] - :response-time ms :response'))
+
 
 logger.token('response',function(req,res){
     return JSON.stringify(req.body)
 })
 
-let persons = [
-    {
-        id:"1",
-        name:"Arto Hellas",
-        number:"040-123456"
-    },
-    {
-        id:"2",
-        name:"Ada Lovelace",
-        number:"3-44-5323523"
-    },
-    {
-        id:"3",
-        name:"Dan Abramov",
-        number:"12-43-234345"
-    }
-]
 
 app.get('/', (req,res)=>{
     res.send("<div>Hello from backend</div>")
 })
 app.get('/api/persons',(req,res)=>{
-    res.json(persons)
+    PhoneBookModel.find({}).then((result)=>{
+    
+        res.json(result)
+    })
+    .catch(error=>console.log("error occured ", error.message))
 })
 
 app.get('/info',(req,res)=>{
@@ -44,22 +31,16 @@ app.get('/info',(req,res)=>{
 
 app.get('/api/persons/:id', (req,res)=>{
     const id = req.params.id;
-    console.log('id', id)
-
-    const person = persons.find(person=>person.id===id);
-
-    if(!person){
-        return res.status(404).end();
-    }
-    res.json(person);
+    PhoneBookModel.find({_id:id})
+    .then(person=>res.json(person))
 })
 
 app.delete('/api/persons/:id',(req,res)=>{
     const id = req.params.id
     
-    persons = persons.filter(person=>person.id!==id);
-
-    res.json({id}).status(200)
+    PhoneBookModel.findByIdAndDelete(id)
+    .then(personRemoved=>res.json({id:personRemoved.id}).status(200))
+    .catch(err=>console.log("error deleting user ", err.message))
 
 })
 
