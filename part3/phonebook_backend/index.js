@@ -35,6 +35,7 @@ app.get('/api/persons/:id', (req,res)=>{
     .then(person=>res.json(person))
 })
 
+//implemented deleting people in the database and intregrated with frontend
 app.delete('/api/persons/:id',(req,res)=>{
     const id = req.params.id
     
