@@ -21,7 +21,10 @@ app.get('/api/persons',(req,res)=>{
 })
 
 app.get('/info',(req,res)=>{
-    res.send(`<div><p> Phonebook has info for ${persons.length} people</p> <p>${Date()}</p></div>`)
+    PhoneBookModel.find()
+    .then(people=>{
+        res.send(`<div><p> Phonebook has info for ${people.length} people</p> <p>${Date()}</p></div>`)
+    })
 })
 
 app.get('/api/persons/:id', (req,res,next)=>{
