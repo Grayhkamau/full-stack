@@ -14,34 +14,33 @@ logger.token('response',function(req,res){
 })
 
 
-app.get('/', (req,res)=>{
-    res.send("<div>Hello from backend</div>")
-})
 app.get('/api/persons',(req,res)=>{
     PhoneBookModel.find({}).then((result)=>{
-    
-        res.json(result)
+        res.json(result||[])
     })
-    .catch(error=>console.log("error occured ", error.message))
 })
 
 app.get('/info',(req,res)=>{
     res.send(`<div><p> Phonebook has info for ${persons.length} people</p> <p>${Date()}</p></div>`)
 })
 
-app.get('/api/persons/:id', (req,res)=>{
+app.get('/api/persons/:id', (req,res,next)=>{
     const id = req.params.id;
-    PhoneBookModel.find({_id:id})
-    .then(person=>res.json(person))
+    PhoneBookModel.findById(id)
+    .then(person=>{
+        if(!person) res.status(404).end()
+        res.json(person)
+    })
+    .catch(err=>next(err))
 })
 
 //implemented deleting people in the database and intregrated with frontend
-app.delete('/api/persons/:id',(req,res)=>{
+app.delete('/api/persons/:id',(req,res, next)=>{
     const id = req.params.id
     
     PhoneBookModel.findByIdAndDelete(id)
     .then(personRemoved=>res.json({id:personRemoved.id}).status(200))
-    .catch(err=>console.log("error deleting user ", err.message))
+    .catch(err=>next(err))
 
 })
 
@@ -58,6 +57,15 @@ app.post('/api/persons', (req,res)=>{
         res.json(person)
     })
 })
+
+const errorHandler = (error,req,res,next)=>{
+        if(error.name === "CastError") res.status(400).send({error:'malformatted id'})
+
+        next(error);
+}
+
+app.use(errorHandler);
+
 const PORT = 3001;
 app.listen(PORT,()=>{
     console.log(`app listening on port ${PORT}`)
