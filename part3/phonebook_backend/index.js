@@ -49,13 +49,27 @@ app.post('/api/persons', (req,res)=>{
 
     if(!body||!body?.name||!body?.number) return res.status(400).json({error:'name or number missing'});
     
-    let newPerson = new PhoneBookModel({
-        name:body.name,
-        number:body.number
+
+        let newPerson = new PhoneBookModel({
+            name:body.name,
+            number:body.number
+        })
+        newPerson.save().then(person=>{
+            res.json(person)
+        })    
+})
+
+
+app.put('/api/persons/:id', (req,res,next)=>{
+    let id = req.params.id;
+    let {number, name} = req.body;
+    PhoneBookModel.findByIdAndUpdate(id, {number})
+    .then(updatedPerson=>{
+        if(!updatedPerson) res.status(404).end()
+        updatedPerson.number = number
+        res.json(updatedPerson)
     })
-    newPerson.save().then(person=>{
-        res.json(person)
-    })
+    .catch(err=>next(err))
 })
 
 const errorHandler = (error,req,res,next)=>{

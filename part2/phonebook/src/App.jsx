@@ -31,6 +31,7 @@ const App=()=>{
           if(!window.confirm(`${newName} is already added to the phonebook, replace the number with a new one?`)) return;
             personServices.update(persons[exists].id, {name:newName,number:newNumber})
             .then(updatedPerson=>{
+              console.log('persons updated',updatedPerson)
                 setPersons(persons.map(person=>person.name===newName?updatedPerson:person))
 
                 setNotificationType('success')
@@ -77,10 +78,8 @@ const App=()=>{
   const handleFilter = (e)=>{
     setFilter(e.target.value);
     let personsFiltered = persons.filter((person)=>{
-      console.log(person.name.toLowerCase())
       return person.name.toLowerCase().includes(e.target.value.toLowerCase())
     })
-    console.log(personsFiltered)
     setFilteredNames(personsFiltered);
   }
 
