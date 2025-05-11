@@ -45,6 +45,7 @@ const App=()=>{
                 setNewNumber('')
             })
             .catch(error=>{
+              console.log('error reaching frontend')
               setNotificationType('fail')
               setNotification(`${newName} had already been removed from the server`);
               setTimeout(() => {setNotification('')}, 5000);
@@ -72,7 +73,13 @@ const App=()=>{
           setNewName("")
 
           setNewNumber('')
-        })
+        }) 
+        .catch(error=>{
+              console.log('error reaching frontend',error)
+              setNotificationType('fail')
+              setNotification(error.response.data.error);
+              setTimeout(() => {setNotification('')}, 5000);
+            })
     
   }
   const handleFilter = (e)=>{

@@ -4,7 +4,7 @@ const logger = require('morgan');
 const PhoneBookModel = require('./models/phonebook');
 
 const app = express();
-app.use(express.static("dist"));
+// app.use(express.static("dist"));
 app.use(express.json());
 app.use(logger(':method :url :status :res[content-length] - :response-time ms :response'))
 
@@ -47,11 +47,8 @@ app.delete('/api/persons/:id',(req,res, next)=>{
 
 })
 
-app.post('/api/persons', (req,res)=>{
-    let body = req.body;
-
-    if(!body||!body?.name||!body?.number) return res.status(400).json({error:'name or number missing'});
-    
+app.post('/api/persons', (req,res, next)=>{
+    let body = req.body;    
 
         let newPerson = new PhoneBookModel({
             name:body.name,
@@ -59,7 +56,8 @@ app.post('/api/persons', (req,res)=>{
         })
         newPerson.save().then(person=>{
             res.json(person)
-        })    
+        }) 
+        .catch(error=>next(error))  
 })
 
 
@@ -77,9 +75,10 @@ app.put('/api/persons/:id', (req,res,next)=>{
 
 const errorHandler = (error,req,res,next)=>{
         if(error.name === "CastError") res.status(400).send({error:'malformatted id'})
-
+        else if(error.name="ValidationError") res.status(400).json({error:error.message})
         next(error);
 }
+
 
 app.use(errorHandler);
 
