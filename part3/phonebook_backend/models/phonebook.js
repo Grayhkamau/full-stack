@@ -15,9 +15,14 @@ const phoneBookSchema = new mongoose.Schema({
             minlength: 3,
             required:true
         },
+       
         number:{
             type:String,
-            required:true
+            minlength:8,
+            required:true,
+            validate:[function (number){
+                return (number.includes('-') && number.split("-").length===2 && (number.split("-")[0].length==3 || number.split("-")[0].length===2))
+            }, "invalid phone number"]
         }
 })
 
