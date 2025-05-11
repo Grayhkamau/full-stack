@@ -4,7 +4,7 @@ const logger = require('morgan');
 const PhoneBookModel = require('./models/phonebook');
 
 const app = express();
-// app.use(express.static("dist"));
+app.use(express.static("dist"));
 app.use(express.json());
 app.use(logger(':method :url :status :res[content-length] - :response-time ms :response'))
 
