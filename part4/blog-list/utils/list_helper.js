@@ -45,4 +45,29 @@ const mostBlogs = (blogs)=>{
 
     return authorsAndBlogs.reduce(mostBlogsReducer,authorsAndBlogs[0]) 
 }
-module.exports = {dummy,total_likes, favouriteBlog, mostBlogs};
+
+const mostLikes = (blogs)=>{
+    
+    if(!blogs.length) return 0;
+
+    let authorsAndLikesReducer = (authorsAndLikesArray, blog)=>{
+        let authorAndLikesInArr = authorsAndLikesArray.find(authorAndLikes=>authorAndLikes.author === blog.author)
+        if(authorAndLikesInArr) {
+            authorAndLikesInArr.likes+=blog.likes
+            return authorsAndLikesArray
+        }
+        authorsAndLikesArray.push({author:blog.author,likes:blog.likes})
+        return authorsAndLikesArray
+    }
+
+    let authorsAndLikes = blogs.reduce(authorsAndLikesReducer, []);
+
+    let mostBlogsReducer = (topAuthor, currentAuthor)=>{
+        if(topAuthor.likes>currentAuthor.likes) return topAuthor
+
+        return currentAuthor
+    }
+
+    return authorsAndLikes.reduce(mostBlogsReducer,authorsAndLikes[0]) 
+}
+module.exports = {dummy,total_likes, favouriteBlog, mostBlogs, mostLikes};
