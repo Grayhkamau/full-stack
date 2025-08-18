@@ -86,7 +86,7 @@ test('saved blog successfully', async()=>{
 })
 
 
-test.only('missing likes field defaults to 0', async()=>{
+test('missing likes field defaults to 0', async()=>{
     let blog = {
                 title: 'The first blog',
                 author: 'John Doe',
@@ -101,5 +101,28 @@ test.only('missing likes field defaults to 0', async()=>{
     let response =  await api.get('/api/blogs')
 
     assert.strictEqual(response.body[response.body.length-1].likes,0)
+})
+
+test.only('missing title or author is handled properly', async()=>{
+
+    let blog = {
+                title: 'The first blog',
+                url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf'
+            }
+    
+    await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(400)
+
+    delete blog.title
+
+    blog.author = "John Doe"
+
+    await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(400)
+
 })
 after(async()=>{await mongoose.connection.close()})
