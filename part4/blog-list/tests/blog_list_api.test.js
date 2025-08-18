@@ -37,7 +37,7 @@ beforeEach(async()=>{
 })
 
 
-test.only('correct amount of blogs returned', async()=>{
+test('correct amount of blogs returned', async()=>{
     let response =  await api
     .get('/api/blogs')
     .expect(200)
@@ -56,5 +56,32 @@ test('blogs returned with id property', async()=>{
     let blogKeys = Object.keys(response.body[0])
 
     assert(blogKeys.includes('id'))
+})
+
+test('saved blog successfully', async()=>{
+    let blogsBefore = await api.get('/api/blogs');
+    let blog = {
+                title: 'The first blog',
+                author: 'John Doe',
+                url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+                likes: 5,
+            }
+
+    await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    let blogsAfter =  await api.get('/api/blogs')
+
+    let titles = blogsAfter.body.map(blog=>blog.title);
+
+    assert(titles.includes(blog.title))
+
+    assert.strictEqual(blogsAfter.body.length,blogsBefore.body.length+1);
+
+
+
 })
 after(async()=>{await mongoose.connection.close()})
