@@ -37,7 +37,7 @@ beforeEach(async()=>{
 })
 
 
-test('correct amount of blogs returned', async()=>{
+test.only('correct amount of blogs returned', async()=>{
     let response =  await api
     .get('/api/blogs')
     .expect(200)
@@ -46,4 +46,15 @@ test('correct amount of blogs returned', async()=>{
     assert.strictEqual(response.body.length,blog_list.length)
 })
 
+
+test('blogs returned with id property', async()=>{
+    let response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type',/application\/json/)
+
+    let blogKeys = Object.keys(response.body[0])
+
+    assert(blogKeys.includes('id'))
+})
 after(async()=>{await mongoose.connection.close()})
