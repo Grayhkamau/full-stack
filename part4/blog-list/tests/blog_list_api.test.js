@@ -4,26 +4,10 @@ const supertest =  require('supertest')
 const mongoose = require('mongoose');
 const app = require('../app');
 const Blog = require('../models/blogs');
+const { blogsInDB, blog_list, saveBlog } = require('./blog_list_api._helper');
 const api =  supertest(app);
 
-const blog_list = [{
-                    title: 'Go To Statement Considered Harmful',
-                    author: 'Edsger W. Dijkstra',
-                    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-                    likes: 5,
-                },
-                {
-                    title: 'Go To Statement Considered Harmful',
-                    author: 'Edsger W. Dijkstra',
-                    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-                    likes: 5,
-                },
-                {
-                    title: 'Go To Statement Considered Harmful',
-                    author: 'Edsger W. Dijkstra',
-                    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-                    likes: 5,
-}]
+
 
 
 describe('when there is initially some notes saved',()=>{
@@ -39,28 +23,22 @@ describe('when there is initially some notes saved',()=>{
 
     describe("blog returned", ()=>{
         test('correct amount of blogs returned', async()=>{
-            let response =  await api
-            .get('/api/blogs')
-            .expect(200)
-            .expect('Content-Type', /application\/json/)
+            let response =  await blogsInDB()
 
-            assert.strictEqual(response.body.length,blog_list.length)
+            assert.strictEqual(response.length,blog_list.length)
         })
 
         test('blogs returned with id property', async()=>{
-            let response = await api
-            .get('/api/blogs')
-            .expect(200)
-            .expect('Content-Type',/application\/json/)
+            let response = await blogsInDB()
 
-            let blogKeys = Object.keys(response.body[0])
+            let blogKeys = Object.keys(response[0])
 
             assert(blogKeys.includes('id'))
         })
     })
     describe("saving blogs", ()=>{
         test('saved blog successfully', async()=>{
-            let blogsBefore = await api.get('/api/blogs');
+            let blogsBefore = await blogsInDB();
             let blog = {
                         title: 'The first blog',
                         author: 'John Doe',
@@ -68,19 +46,15 @@ describe('when there is initially some notes saved',()=>{
                         likes: 5,
                     }
 
-            await api
-            .post('/api/blogs')
-            .send(blog)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
+            await saveBlog(blog)
 
-            let blogsAfter =  await api.get('/api/blogs')
+            let blogsAfter =  await blogsInDB()
 
-            let titles = blogsAfter.body.map(blog=>blog.title);
+            let titles = blogsAfter.map(blog=>blog.title);
 
             assert(titles.includes(blog.title))
 
-            assert.strictEqual(blogsAfter.body.length,blogsBefore.body.length+1);
+            assert.strictEqual(blogsAfter.length,blogsBefore.length+1);
         })
 
         test('missing likes field defaults to 0', async()=>{
@@ -90,13 +64,10 @@ describe('when there is initially some notes saved',()=>{
                         url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf'
                     }
             
-            await api
-            .post('/api/blogs')
-            .send(blog)
-            
-            let response =  await api.get('/api/blogs')
+            await saveBlog(blog)
+            let response =  await blogsInDB()
 
-            assert.strictEqual(response.body[response.body.length-1].likes,0)
+            assert.strictEqual(response[response.length-1].likes,0)
         })
         test('missing title or author is handled properly', async()=>{
 
@@ -123,20 +94,37 @@ describe('when there is initially some notes saved',()=>{
 
     })
     describe("deleting a blog", ()=>{
-        test.only('deleting a blog', async()=>{
+        test('deleting a blog', async()=>{
             let blog = {
                         title: 'The first blog',
                         author: 'John Doe',
                         url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf'
                     }
 
-            const response = await api
-            .post('/api/blogs')
-            .send(blog)
+            const response = await saveBlog(blog)
 
             await api
-            .delete(`/api/blogs/${response.body.id}`)
+            .delete(`/api/blogs/${response.id}`)
             .expect(204)
+        })
+    })
+    describe('update blogs', ()=>{
+        test.only('update likes', async()=>{
+            let blog = {
+                        title: 'The first blog',
+                        author: 'John Doe',
+                        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+                        likes:0
+                    }
+
+            const blogBeforeUpdate = await saveBlog(blog)
+
+            const blogAfterUpdate = await api
+            .put(`/api/blogs/${blogBeforeUpdate.id}`)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+            assert.strictEqual(blogBeforeUpdate.likes+1,blogAfterUpdate.body.likes)
         })
     })
 })
