@@ -3,9 +3,10 @@ const express = require('express')
 const mongoose = require('mongoose')
 const blogsRouter =  require('./controllers/blogs');
 const {errorHandler, unknownEndpoint} =  require('./utils/middlware');
+const {MONGODB_URL} = require('./utils/config');
 mongoose
-.connect(process.env.MONGODB_URL)
-.then((response)=>console.log('mongo db connected'))
+.connect(MONGODB_URL)
+.then(()=>console.log('mongo db connected'))
 .catch((error)=>console.error('mongo db connection error-> ', error.message))
 
 app.use(express.json())

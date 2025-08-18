@@ -193,7 +193,7 @@ describe("most likes", ()=>{
                             title: 'Go To Statement Considered Harmful',
                             author: 'Edsger W. Dijkstra',
                             url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-                            likes: 5,
+                            likes: 50,
                             __v: 0
                         },
                         {
@@ -205,6 +205,6 @@ describe("most likes", ()=>{
                             __v: 0
                         }]
 
-        assert.deepStrictEqual(mostLikes(blog_list),{author:'kamau',likes:35})
+        assert.deepStrictEqual(mostLikes(blog_list),{author:'Edsger W. Dijkstra',likes:50})
     })
 })
