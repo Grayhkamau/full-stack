@@ -31,7 +31,7 @@ beforeEach(async()=>{
 
     const blogObjects = blog_list.map(blog=>new Blog(blog))
 
-    const blogPromiseArray =  blogObjects.map(async (object)=>{await object.save()})
+    const blogPromiseArray =  blogObjects.map(object=>object.save())
 
     await Promise.all(blogPromiseArray)
 })
@@ -83,5 +83,23 @@ test('saved blog successfully', async()=>{
 
 
 
+})
+
+
+test.only('missing likes field defaults to 0', async()=>{
+    let blog = {
+                title: 'The first blog',
+                author: 'John Doe',
+                url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf'
+            }
+    
+    await api
+    .post('/api/blogs')
+    .send(blog)
+    
+
+    let response =  await api.get('/api/blogs')
+
+    assert.strictEqual(response.body[response.body.length-1].likes,0)
 })
 after(async()=>{await mongoose.connection.close()})
