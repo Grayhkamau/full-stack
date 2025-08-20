@@ -1,7 +1,8 @@
 const Blog = require('../models/blogs');
 
 const blogsRouter =  require('express').Router();
-const User = require('../models/users')
+const User = require('../models/users');
+const { verify } = require('../utils/jwt');
 
 blogsRouter.get('/', async (req, res) => {
     const response = await Blog.find({}).populate('creator', {name:1,username:1})
@@ -12,6 +13,21 @@ blogsRouter.get('/', async (req, res) => {
 
 blogsRouter.post('/', async (req, res) => {
   let {author,title,url} = req.body;
+  let header = req.headers.authorization;
+
+  if(!header) return res.status(401).json({error:'no token attached'});
+
+  let token = header.replace('Bearer ', '');
+
+  if(!token) return res.status(401).json({error:'no token attached'});
+
+  let userInfo = verify(token);
+
+  if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})
+
+  let user = await User.findById({_id:userInfo.id})
+
+  if(!user) return res.status(401).json({error:'incorrect token'})
 
   if(!author||!title||!url) return res.status(400).end()
 

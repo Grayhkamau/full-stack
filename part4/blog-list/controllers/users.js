@@ -2,6 +2,7 @@ const usersRouter = require('express').Router();
 const User = require('../models/users');
 const {hash_password,compare_password} = require('../utils/encrypt_password');
 
+
 usersRouter.post('/', async(req,res)=>{
     const {username, password, name} =  req.body;
 
