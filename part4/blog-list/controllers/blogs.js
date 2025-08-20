@@ -3,6 +3,7 @@ const Blog = require('../models/blogs');
 const blogsRouter =  require('express').Router();
 const User = require('../models/users');
 const { verify } = require('../utils/jwt');
+const { userExtractor } = require('../utils/middlware');
 
 blogsRouter.get('/', async (req, res) => {
     const response = await Blog.find({}).populate('creator', {name:1,username:1})
@@ -10,13 +11,11 @@ blogsRouter.get('/', async (req, res) => {
 })
 
 
-blogsRouter.post('/', async (req, res) => {
+blogsRouter.post('/', userExtractor, async (req, res) => {
   let {author,title,url} = req.body;
   if(!author||!title||!url) return res.status(400).end()
 
-  let userInfo = verify(req.token);
-
-  if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})
+  let userInfo = req.user;
 
   let user = await User.findById({_id:userInfo.id})
 
@@ -35,11 +34,11 @@ blogsRouter.post('/', async (req, res) => {
   return res.status(201).json(response)
 })
 
-blogsRouter.delete('/:id', async(req,res)=>{
+blogsRouter.delete('/:id', userExtractor, async(req,res)=>{
 
   const id = req.params.id
 
-  const userInfo = verify(req.token)
+  const userInfo = req.user;
 
   if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})
   

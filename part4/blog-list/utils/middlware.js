@@ -1,3 +1,5 @@
+const { verify } = require("./jwt");
+
 const tokenExtractor = (req,res,next)=>{
     let header =  req.headers.authorization;
 
@@ -8,6 +10,16 @@ const tokenExtractor = (req,res,next)=>{
 
 }
 
+const userExtractor = (req,res,next)=>{
+    let userInfo =  verify(req.token);
+
+    if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})
+
+    req.user = userInfo;
+
+    return next()
+
+}
 const unknownEndpoint = (req,res)=>{
     return res.status(404).json({message:'unknown endpoint'})
 }
@@ -24,4 +36,4 @@ const errorHandler = (error,req,res,next)=>{
 }
 
 
-module.exports = {unknownEndpoint,errorHandler, tokenExtractor}
+module.exports = {unknownEndpoint,errorHandler, tokenExtractor, userExtractor}
