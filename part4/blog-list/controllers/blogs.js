@@ -36,9 +36,16 @@ blogsRouter.post('/', async (req, res) => {
 })
 
 blogsRouter.delete('/:id', async(req,res)=>{
+
   const id = req.params.id
+
+  const userInfo = verify(req.token)
+
+  if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})
   
-  await Blog.findByIdAndDelete({_id:id})
+  let blogDeleted = await Blog.findOneAndDelete({_id:id,creator:userInfo.id})
+
+  if(!blogDeleted) return res.status(401).end();
 
   return res.status(204).end()
 
