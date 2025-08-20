@@ -22,10 +22,15 @@ const blogSchema = mongoose.Schema({
     required:false,
     default:0
   },
+  creator:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'user'
+  }
 })
 
 blogSchema.set("toJSON",{
   transform:(document,returnedObject) => {
+    console.log('tojson', returnedObject)
     returnedObject.id = returnedObject._id.toString()
 
     delete returnedObject._id

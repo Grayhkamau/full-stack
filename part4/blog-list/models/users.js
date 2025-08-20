@@ -16,19 +16,26 @@ const usersSchema = mongoose.Schema({
     hashPassword:{
         type:String,
         required:true
-    }
+    },
+    blogs:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Blog"
+        }
+    ]
 })
+
 
 usersSchema.set('toJson', {
-    tranform: (document,object)=>{
-        object.id = object._id.toString()
-        delete object._v
-        delete object._id
+    tranform: (document,returnedObject)=>{
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject.__v
+        delete returnedObject._id
 
-        delete object.hashPassword
+        delete returnedObject.hashPassword
     }
 })
 
-const Users = mongoose.model('user', usersSchema);
+const User = mongoose.model('user', usersSchema);
 
-module.exports = Users;
+module.exports = User;

@@ -20,7 +20,7 @@ usersRouter.post('/', async(req,res)=>{
 })
 
 usersRouter.get('/', async(req,res)=>{
-    let users = await User.find({});
+    let users = await User.find({}).populate('blogs', {title:1,author:1,url:1,likes:1});
 
     if(!users.length) return res.status(404).json({msg:"no users in db"})
 
