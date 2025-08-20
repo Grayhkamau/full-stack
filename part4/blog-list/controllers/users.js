@@ -1,12 +1,13 @@
 const usersRouter = require('express').Router();
 const User = require('../models/users');
-const bcrypt = require('bcrypt');
+const {hash_password,compare_password} = require('../utils/encrypt_password');
 
 usersRouter.post('/', async(req,res)=>{
     const {username, password, name} =  req.body;
 
+    if(name.length<3||password.length<3) return res.status(400).json({error:'invalid username or password'})
     const saltRounds = 10;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
+    const hashPassword = await hash_password(password, saltRounds);
 
     const newUser = new User({
         name,username,hashPassword

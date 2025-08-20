@@ -19,6 +19,15 @@ const usersSchema = mongoose.Schema({
     }
 })
 
+usersSchema.set('toJson', {
+    tranform: (document,object)=>{
+        object.id = object._id.toString()
+        delete object._v
+        delete object._id
+
+        delete object.hashPassword
+    }
+})
 
 const Users = mongoose.model('user', usersSchema);
 
