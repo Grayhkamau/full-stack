@@ -10,18 +10,11 @@ blogsRouter.get('/', async (req, res) => {
 })
 
 
-
 blogsRouter.post('/', async (req, res) => {
   let {author,title,url} = req.body;
-  let header = req.headers.authorization;
+  if(!author||!title||!url) return res.status(400).end()
 
-  if(!header) return res.status(401).json({error:'no token attached'});
-
-  let token = header.replace('Bearer ', '');
-
-  if(!token) return res.status(401).json({error:'no token attached'});
-
-  let userInfo = verify(token);
+  let userInfo = verify(req.token);
 
   if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})
 
@@ -29,16 +22,13 @@ blogsRouter.post('/', async (req, res) => {
 
   if(!user) return res.status(401).json({error:'incorrect token'})
 
-  if(!author||!title||!url) return res.status(400).end()
-
-  const randomUser =  await User.find({})
-  console.log(randomUser[0]._id)
+  console.log(user._id)
   const blog = new Blog({
-    author, title, url, creator:randomUser[0]._id
+    author, title, url, creator:user._id
   })
   
-  randomUser[0].blogs = randomUser[0].blogs.concat(blog._id)
-  await randomUser[0].save()
+  user.blogs = user.blogs.concat(blog._id)
+  await user.save()
 
   let response = await blog.save();
 
