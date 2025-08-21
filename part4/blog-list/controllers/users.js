@@ -1,6 +1,6 @@
 const usersRouter = require('express').Router();
 const User = require('../models/users');
-const {hash_password,compare_password} = require('../utils/encrypt_password');
+const {hash_password} = require('../utils/encrypt_password');
 
 
 usersRouter.post('/', async(req,res)=>{
@@ -14,6 +14,8 @@ usersRouter.post('/', async(req,res)=>{
         name,username,hashPassword
     })
 
+    
+     
     let userSaved = await newUser.save()
 
     return res.status(201).json(userSaved)

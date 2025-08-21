@@ -2,7 +2,6 @@ const Blog = require('../models/blogs');
 
 const blogsRouter =  require('express').Router();
 const User = require('../models/users');
-const { verify } = require('../utils/jwt');
 const { userExtractor } = require('../utils/middlware');
 
 blogsRouter.get('/', async (req, res) => {
@@ -21,7 +20,6 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
 
   if(!user) return res.status(401).json({error:'incorrect token'})
 
-  console.log(user._id)
   const blog = new Blog({
     author, title, url, creator:user._id
   })
@@ -31,6 +29,7 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
 
   let response = await blog.save();
 
+  console.log('saving blog')
   return res.status(201).json(response)
 })
 
