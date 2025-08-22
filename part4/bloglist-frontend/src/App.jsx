@@ -3,7 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/login';
 import login from './services/login';
-
+import AddBlogForm from './components/add_blog';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,8 +11,13 @@ const App = () => {
     username:'',
     password:''
   })
+  const [blogDetails,setBlogDetails] = useState({
+    title:'',author:'',URL:''
+  })
+
   const [user,setUser] = useState(null);
   const [token,setToken] =  useState(null);
+  
 
 
   useEffect(() => {
@@ -54,13 +59,33 @@ const App = () => {
     setToken(null)
   }
 
+  const handleBlogFormChange = (e)=>{
+    setBlogDetails((prev)=>{return {...prev,[e.target.name]:e.target.value}})
+  }
+  const handleBlogSubmit = async(e)=>{
+    e.preventDefault();
+
+    if(!blogDetails.author||!blogDetails.URL||!blogDetails.title) return;
+
+    try {
+      const blogSaved = await blogService.add(token,blogDetails);
+
+      setBlogs(prev=>{return [blogSaved,...prev]})
+
+    } catch (error) {
+      alert('error saving blog')
+    }
+
+  }
   return (
     <div>
-      {user?
+      {user
+      ?
         <>
           <h2>blogs</h2>
           <p>{user.name} logged in </p>
           <button type='submit' onClick={handleLogOut}>Log out</button>
+          <AddBlogForm title={blogDetails.title} author={blogDetails.author} URL={blogDetails.URL} handleBlogFormChange={handleBlogFormChange} handleBlogSubmit={handleBlogSubmit}/>
           {
           blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
