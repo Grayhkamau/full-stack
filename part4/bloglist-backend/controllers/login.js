@@ -18,7 +18,7 @@ loginRouter.post('/', async(req,res)=>{
 
     console.log('getting login second')
 
-    return res.status(200).json({token})
+    return res.status(200).json({token,user:user[0]})
 })
 
 module.exports = loginRouter

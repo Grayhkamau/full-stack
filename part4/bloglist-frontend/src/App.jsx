@@ -12,6 +12,7 @@ const App = () => {
     password:''
   })
   const [user,setUser] = useState(null);
+  const [token,setToken] =  useState(null);
 
 
   useEffect(() => {
@@ -20,6 +21,16 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(()=>{
+    let userAndToken = window.localStorage.getItem('userAndToken');
+
+    if(userAndToken){
+      let {user,token} = JSON.parse(userAndToken);
+      setUser(user)
+      setToken(token)
+    }
+  },[])
+
   const handleChangeCredentials = (e)=>{
       setUserInput({...userInput,[e.target.name]:e.target.value})
   }
@@ -27,27 +38,39 @@ const App = () => {
   const handleLogin = async(e)=>{
       try {
         e.preventDefault()
-        let user = await login(userInput);
+        let response = await login(userInput);
 
-        setUser(user)
+        window.localStorage.setItem('userAndToken',JSON.stringify(response))
+        setUser(response.user)
 
       } catch (error) {
         alert('error',error.message)
       }
   }
 
+  const handleLogOut = ()=>{
+    window.localStorage.removeItem('userAndToken');
+    setUser(null)
+    setToken(null)
+  }
+
   return (
     <div>
-      <h2>blogs</h2>
       {user?
         <>
+          <h2>blogs</h2>
           <p>{user.name} logged in </p>
-          {blogs.map(blog =>
+          <button type='submit' onClick={handleLogOut}>Log out</button>
+          {
+          blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
         </>
       :
-        <LoginForm username={userInput.username} password={userInput.password} setCredentials={handleChangeCredentials} handleLogin={handleLogin}/>
+        <>
+          <h2>Log in to Application</h2>
+          <LoginForm username={userInput.username} password={userInput.password} setCredentials={handleChangeCredentials} handleLogin={handleLogin}/>
+        </>
       }
       
     </div>

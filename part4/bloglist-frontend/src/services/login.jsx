@@ -7,7 +7,7 @@ const login = async(credentials)=>{
 
     console.log(response);
 
-    return response.data.user
+    return response.data
 }
 
 export default login
