@@ -1,15 +1,15 @@
 
-const AddBlogForm = ({title,author,URL,handleBlogFormChange,handleBlogSubmit})=>{
+const AddBlogForm = ({title,author,url,handleBlogFormChange,handleBlogSubmit})=>{
     return(
         <div>
             <form onSubmit={handleBlogSubmit}>
-                <label for="title">Title</label>;
+                <label htmlFor="title">Title</label>;
                 <input type="text" name="title" value={title} onChange={(e)=>handleBlogFormChange(e)}/>
-                <label for="author">Author</label>;
+                <label htmlFor="author">Author</label>;
                 <input type="text" name="author" value={author} onChange={(e)=>handleBlogFormChange(e)}/>
-                <label for="url">URL</label>;
-                <input type="text" name="url" value={URL} onChange={(e)=>handleBlogFormChange(e)}/>
-                <input type="submit">Submit</input>
+                <label htmlFor="url">URL</label>;
+                <input type="text" name="url" value={url} onChange={(e)=>handleBlogFormChange(e)}/>
+                <input type="submit" value={"submit"}/>
             </form>
         </div>
     )

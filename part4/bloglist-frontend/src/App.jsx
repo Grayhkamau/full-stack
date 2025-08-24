@@ -12,13 +12,21 @@ const App = () => {
     password:''
   })
   const [blogDetails,setBlogDetails] = useState({
-    title:'',author:'',URL:''
+    title:'',author:'',url:''
   })
-
   const [user,setUser] = useState(null);
   const [token,setToken] =  useState(null);
+  const [responseMsg,setMsg] =  useState('');
+  const [responseStatus,setStatus] =  useState(null)
   
-
+  const showStatus = (status,msg)=>{
+        setStatus(status);
+        setMsg(msg)
+        setTimeout(()=>{
+          setStatus(null)
+          setMsg(null)
+        },3000)
+      }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -47,9 +55,11 @@ const App = () => {
 
         window.localStorage.setItem('userAndToken',JSON.stringify(response))
         setUser(response.user)
+        setToken(response.token)
+        showStatus('sucess', "logged in sucessfully")
 
       } catch (error) {
-        alert('error',error.message)
+        showStatus('error', 'wrong username and password')
       }
   }
 
@@ -65,27 +75,37 @@ const App = () => {
   const handleBlogSubmit = async(e)=>{
     e.preventDefault();
 
-    if(!blogDetails.author||!blogDetails.URL||!blogDetails.title) return;
+    if(!blogDetails.author||!blogDetails.url||!blogDetails.title) return;
 
     try {
       const blogSaved = await blogService.add(token,blogDetails);
 
       setBlogs(prev=>{return [blogSaved,...prev]})
-
+      showStatus('sucess',`a new blog "${blogSaved.title}" by ${blogSaved.author} added`)
+      setBlogDetails({title:'',author:'',url:''})
     } catch (error) {
-      alert('error saving blog')
+       showStatus('error', 'error saving blog')
     }
 
   }
+  let errorStyle ={
+    border:'2px solid red',
+    color:'red'
+  }
+  const successStyle = {
+    border:'2px solid green',
+    color:'green'
+  }
   return (
     <div>
+      {responseMsg?<h2 style={responseStatus==="sucess"?successStyle:errorStyle}>{responseMsg}</h2>:''}
       {user
       ?
         <>
           <h2>blogs</h2>
           <p>{user.name} logged in </p>
           <button type='submit' onClick={handleLogOut}>Log out</button>
-          <AddBlogForm title={blogDetails.title} author={blogDetails.author} URL={blogDetails.URL} handleBlogFormChange={handleBlogFormChange} handleBlogSubmit={handleBlogSubmit}/>
+          <AddBlogForm title={blogDetails.title} author={blogDetails.author} url={blogDetails.url} handleBlogFormChange={handleBlogFormChange} handleBlogSubmit={handleBlogSubmit}/>
           {
           blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
