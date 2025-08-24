@@ -12,9 +12,7 @@ const App = () => {
     username:'',
     password:''
   })
-  const [blogDetails,setBlogDetails] = useState({
-    title:'',author:'',url:''
-  })
+ 
   const [user,setUser] = useState(null);
   const [token,setToken] =  useState(null);
   const [responseMsg,setMsg] =  useState('');
@@ -71,11 +69,8 @@ const App = () => {
     setToken(null)
   }
 
-  const handleBlogFormChange = (e)=>{
-    setBlogDetails((prev)=>{return {...prev,[e.target.name]:e.target.value}})
-  }
-  const handleBlogSubmit = async(e)=>{
-    e.preventDefault();
+
+  const submitBlog = async(blogDetails,setBlogDetails)=>{
 
     if(!blogDetails.author||!blogDetails.url||!blogDetails.title) return;
 
@@ -86,7 +81,7 @@ const App = () => {
       showStatus('sucess',`a new blog "${blogSaved.title}" by ${blogSaved.author} added`)
       setBlogDetails({title:'',author:'',url:''})
       toggleRef.current.toggleVisibility()
-      
+
     } catch (error) {
        showStatus('error', 'error saving blog')
     }
@@ -116,7 +111,7 @@ const App = () => {
                 <br/>
           <Toggable ref={toggleRef}>
             <h1>Create New</h1>
-            <AddBlogForm title={blogDetails.title} author={blogDetails.author} url={blogDetails.url} handleBlogFormChange={handleBlogFormChange} handleBlogSubmit={handleBlogSubmit}/>
+            <AddBlogForm  submitBlog={submitBlog}/>
           </Toggable>
           {
           blogs.map(blog =>
