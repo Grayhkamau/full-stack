@@ -11,6 +11,7 @@ mongoose.connect(MONGODB_URL)
 
 
 logger.token('response',function(req){
+  
   return JSON.stringify(req.body)
 })
 

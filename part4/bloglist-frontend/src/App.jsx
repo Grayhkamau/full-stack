@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/login';
 import login from './services/login';
 import AddBlogForm from './components/add_blog';
+import Toggable from './components/Toggleable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,7 +19,8 @@ const App = () => {
   const [token,setToken] =  useState(null);
   const [responseMsg,setMsg] =  useState('');
   const [responseStatus,setStatus] =  useState(null)
-  
+  const toggleRef = useRef();
+
   const showStatus = (status,msg)=>{
         setStatus(status);
         setMsg(msg)
@@ -83,6 +85,8 @@ const App = () => {
       setBlogs(prev=>{return [blogSaved,...prev]})
       showStatus('sucess',`a new blog "${blogSaved.title}" by ${blogSaved.author} added`)
       setBlogDetails({title:'',author:'',url:''})
+      toggleRef.current.toggleVisibility()
+      
     } catch (error) {
        showStatus('error', 'error saving blog')
     }
@@ -103,9 +107,17 @@ const App = () => {
       ?
         <>
           <h2>blogs</h2>
+
           <p>{user.name} logged in </p>
           <button type='submit' onClick={handleLogOut}>Log out</button>
-          <AddBlogForm title={blogDetails.title} author={blogDetails.author} url={blogDetails.url} handleBlogFormChange={handleBlogFormChange} handleBlogSubmit={handleBlogSubmit}/>
+
+                <br/>
+                <br/>
+                <br/>
+          <Toggable ref={toggleRef}>
+            <h1>Create New</h1>
+            <AddBlogForm title={blogDetails.title} author={blogDetails.author} url={blogDetails.url} handleBlogFormChange={handleBlogFormChange} handleBlogSubmit={handleBlogSubmit}/>
+          </Toggable>
           {
           blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
