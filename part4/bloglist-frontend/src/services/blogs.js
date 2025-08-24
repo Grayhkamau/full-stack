@@ -14,5 +14,10 @@ const add = async(token, blog)=>{
   return response.data
 }
 
+const updateLikes = async(token,blogId)=>{
+  const response = await axios.put(`${baseUrl}/${blogId}`, {headers:{'Authorization':`Bearer ${token}`}})   
 
-export default { getAll, add}
+  return response.data;
+}
+
+export default { getAll, add, updateLikes}

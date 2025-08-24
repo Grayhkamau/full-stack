@@ -1,4 +1,4 @@
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleUpdateLike }) => {
   const [showDetails,setShowDetails] = useState(false)
   
   
@@ -10,6 +10,9 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
+  const updateLikes = ()=>{
+    handleUpdateLike(blog._id)
+  }
   
   return(
     <div style={blogStyle}>
@@ -18,7 +21,7 @@ const Blog = ({ blog }) => {
       ?
         <>
           <p>{blog.url}</p>
-          <p>likes: {blog.likes} <button>like</button></p>
+          <p>likes: {blog.likes} <button onClick={updateLikes}>like</button></p>
           <p>{blog.author}</p>
         </> 
       :

@@ -49,10 +49,10 @@ blogsRouter.delete('/:id', userExtractor, async(req,res)=>{
 
 })
 
-blogsRouter.put('/:id', async(req,res)=>{
+blogsRouter.put('/:id',userExtractor, async(req,res)=>{
   const id = req.params.id;
   
-  let blog = await Blog.findById({_id:id});
+  let blog = await Blog.findById({_id:id}).populate('creator');
 
   if(!blog) return res.status(404).end();
 

@@ -70,6 +70,15 @@ const App = () => {
   }
 
 
+  const handleUpdateLike = async(blogId)=>{
+    try{
+      let blogUpdated = await blogService.updateLikes(token,blogId);
+      setBlogs(blogs.map(blog=>blog._id===blogUpdated._id?blogUpdated:blog))
+    }
+    catch(error){
+        showStatus('error', `error saving blog: ${error.message}`)
+    }
+  }
   const submitBlog = async(blogDetails,setBlogDetails)=>{
 
     if(!blogDetails.author||!blogDetails.url||!blogDetails.title) return;
@@ -115,7 +124,7 @@ const App = () => {
           </Toggable>
           {
           blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog._id} blog={blog}  handleUpdateLike={handleUpdateLike}/>
           )}
         </>
       :
