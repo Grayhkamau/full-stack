@@ -15,7 +15,8 @@ const add = async(token, blog)=>{
 }
 
 const updateLikes = async(token,blogId)=>{
-  const response = await axios.put(`${baseUrl}/${blogId}`, {headers:{'Authorization':`Bearer ${token}`}})   
+  console.log('this is the token->', token)
+  const response = await axios.put(`${baseUrl}/${blogId}`,{},{headers:{'Authorization':`Bearer ${token}`}})   
 
   return response.data;
 }

@@ -10,7 +10,7 @@ const AddBlogForm = ({submitBlog})=>{
 
     const handleBlogSubmit = (e)=>{
         e.preventDefault()
-        submitBlog(blogDetails)
+        submitBlog(blogDetails,setBlogDetails)
     }
     return(
         <div>

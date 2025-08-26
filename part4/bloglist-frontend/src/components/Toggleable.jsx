@@ -7,7 +7,7 @@ const Toggable = (props)=>{
     const hideWhenVisible = {display: showForm ? '':'none'};
     const showWhenInvisible = {display: showForm? 'none': ''};
 
-    useImperativeHandle(props.ref, ()=>{
+    useImperativeHandle(props.reff, ()=>{
         return {toggleVisibility}
     })
     const toggleVisibility = ()=> setShowForm(!showForm)

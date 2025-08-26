@@ -26,7 +26,7 @@ const App = () => {
           setStatus(null)
           setMsg(null)
         },3000)
-      }
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -70,10 +70,10 @@ const App = () => {
   }
 
 
-  const handleUpdateLike = async(blogId)=>{
+const handleUpdateLike = async(blogId)=>{
     try{
       let blogUpdated = await blogService.updateLikes(token,blogId);
-      setBlogs(blogs.map(blog=>blog._id===blogUpdated._id?blogUpdated:blog))
+      setBlogs(blogs.map(blog=>blog.id===blogUpdated.id?blogUpdated:blog))
     }
     catch(error){
         showStatus('error', `error saving blog: ${error.message}`)
@@ -92,6 +92,7 @@ const App = () => {
       toggleRef.current.toggleVisibility()
 
     } catch (error) {
+      console.log('error saving blog', error)
        showStatus('error', 'error saving blog')
     }
 
@@ -118,13 +119,13 @@ const App = () => {
                 <br/>
                 <br/>
                 <br/>
-          <Toggable ref={toggleRef}>
+          <Toggable reff={toggleRef}>
             <h1>Create New</h1>
             <AddBlogForm  submitBlog={submitBlog}/>
           </Toggable>
           {
           blogs.map(blog =>
-            <Blog key={blog._id} blog={blog}  handleUpdateLike={handleUpdateLike}/>
+            <Blog key={blog.id} blog={blog}  handleUpdateLike={handleUpdateLike}/>
           )}
         </>
       :

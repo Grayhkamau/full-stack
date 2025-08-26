@@ -11,6 +11,7 @@ const tokenExtractor = (req,res,next)=>{
 }
 
 const userExtractor = (req,res,next)=>{
+    console.log('token in middleware', req.token)
     let userInfo =  verify(req.token);
 
     if(!userInfo||!userInfo.id) return res.status(401).json({error:'incorrect token'})

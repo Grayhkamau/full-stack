@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const Blog = ({ blog, handleUpdateLike }) => {
   const [showDetails,setShowDetails] = useState(false)
   
@@ -11,13 +13,13 @@ const Blog = ({ blog, handleUpdateLike }) => {
   }
 
   const updateLikes = ()=>{
-    handleUpdateLike(blog._id)
+    handleUpdateLike(blog.id)
   }
   
   return(
     <div style={blogStyle}>
       <p>{blog.title} <button onClick={()=>setShowDetails(!showDetails)}>{showDetails?"hide":"view"}</button></p>
-      {setShowDetails
+      {showDetails
       ?
         <>
           <p>{blog.url}</p>
