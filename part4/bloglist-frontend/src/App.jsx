@@ -79,6 +79,17 @@ const handleUpdateLike = async(blogId)=>{
         showStatus('error', `error saving blog: ${error.message}`)
     }
   }
+
+  const handleRemoveBlogs = async(blogId)=>{
+    try{
+      await blogService.deleteBlog(token,blogId);
+      setBlogs(blogs.filter(blog=>blog.id!==blogId))
+      showStatus('sucess', "blog deleted successfully")
+    }
+    catch(error){
+        showStatus('error', `error deleting blog: ${error.message}`)
+    }
+  }
   const submitBlog = async(blogDetails,setBlogDetails)=>{
 
     if(!blogDetails.author||!blogDetails.url||!blogDetails.title) return;
@@ -126,7 +137,7 @@ const handleUpdateLike = async(blogId)=>{
           {
             
           [...blogs].sort((a,b)=>b.likes-a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog}  handleUpdateLike={handleUpdateLike}/>
+            <Blog key={blog.id} blog={blog} user={user}  handleUpdateLike={handleUpdateLike} handleRemoveBlogs={handleRemoveBlogs}/>
           )}
         </>
       :

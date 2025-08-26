@@ -21,4 +21,9 @@ const updateLikes = async(token,blogId)=>{
   return response.data;
 }
 
-export default { getAll, add, updateLikes}
+const deleteBlog = async(token,blogId)=>{
+  await axios.delete(`${baseUrl}/${blogId}`,{headers:{'Authorization':`Bearer ${token}`}})
+
+}
+
+export default { getAll, add, updateLikes, deleteBlog}

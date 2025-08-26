@@ -43,7 +43,18 @@ blogsRouter.delete('/:id', userExtractor, async(req,res)=>{
   
   let blogDeleted = await Blog.findOneAndDelete({_id:id,creator:userInfo.id})
 
+  console.log('this is the blogdeleted ->', blogDeleted)
   if(!blogDeleted) return res.status(401).end();
+
+  let user = await User.findById({_id:userInfo.id});
+
+  console.log('this is user ->', user)
+
+  let newBlogs = user.blogs.filter(blog=>blog.toString()!==id);
+
+  user.blogs = newBlogs;
+
+  await user.save()
 
   return res.status(204).end()
 
