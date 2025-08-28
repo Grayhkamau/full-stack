@@ -19,16 +19,19 @@ const Blog = ({ blog, handleUpdateLike,user, handleRemoveBlogs }) => {
   const updateLikes = () => {
     handleUpdateLike(blog.id)
   }
-  console.log('creator',blog.creator._id,'user', user._id)
   return(
     <div style={blogStyle}>
-      <p>{blog.title} <button onClick={() => setShowDetails(!showDetails)}>{showDetails?'hide':'view'}</button></p>
+      <p>{blog.title}  
+        <button onClick={() => setShowDetails(!showDetails)}>{showDetails?'hide':'view'}</button>
+      </p>
+      <p>{blog.author}</p>
+
       {showDetails
         ?
         <>
-          <p>{blog.url}</p>
-          <p>likes: {blog.likes} <button onClick={updateLikes}>like</button></p>
-          <p>{blog.author}</p>
+          <p id='url'>{blog.url}</p>
+          <p id='likes'>likes: {blog.likes} <button onClick={updateLikes}>like</button></p>
+         
           {(blog.creator._id||blog.creator)===user._id?
             <button
               style={{ backgroundColor:'#914342ff',borderRadius:5 }}

@@ -91,7 +91,7 @@ const App = () => {
       showStatus('error', `error deleting blog: ${error.message}`)
     }
   }
-  const submitBlog = async(blogDetails,setBlogDetails) => {
+  const submitBlog = async(blogDetails) => {
 
     if(!blogDetails.author||!blogDetails.url||!blogDetails.title) return
 
@@ -100,7 +100,6 @@ const App = () => {
 
       setBlogs(prev => {return [blogSaved,...prev]})
       showStatus('sucess',`a new blog "${blogSaved.title}" by ${blogSaved.author} added`)
-      setBlogDetails({ title:'',author:'',url:'' })
       toggleRef.current.toggleVisibility()
 
     } catch (error) {
