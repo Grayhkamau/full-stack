@@ -29,5 +29,22 @@ describe('blogs', ()=>{
         expect(url).toBeNull()
     })
 
-   
+    test('likes and url are shown when button is clicked', async()=>{
+
+        const user = userEvent.setup();
+
+        let {container} = render(<Blog blog={blog} user={{_id:'hdshdshds'}}/>)
+
+        let showBtn = screen.getByText('view');
+
+        await user.click(showBtn);
+
+        let likes = container.querySelector('#likes');
+        let url = container.querySelector('#url');
+
+        expect(likes).toBeDefined()
+        expect(url).toBeDefined()
+    })
+
+    
 })
