@@ -46,5 +46,34 @@ describe('blogs', ()=>{
         expect(url).toBeDefined()
     })
 
-    
+    test('likes functions is called when button is clicked', async()=>{
+        const user = userEvent.setup();
+
+        const blog = {
+            title:'react testing',
+            author:'doe',
+            url:'https://fullstackopen.com/en/part5/testing_react_apps#tests-for-the-togglable-component',
+            likes:10,
+            creator:'jdjdajdi29322j'
+        }
+        let mockFunc = vi.fn();
+
+        render(<Blog blog={blog} handleUpdateLike={mockFunc} user={{_id:'hdshdshds'}}/>);
+
+        let showBtn = screen.getByText("view");
+
+        await user.click(showBtn);
+
+        let likeBtn = screen.getByText('like');
+
+        console.log('this is a like button->', likeBtn);
+
+        await user.click(likeBtn)
+        await user.click(likeBtn)
+
+        expect(mockFunc.mock.calls).toHaveLength(2);
+    })
+
+
+  
 })
