@@ -75,5 +75,30 @@ describe('blogs', ()=>{
     })
 
 
-  
+    test('adding a blog handler is called with called arguments', async()=>{
+        const user = userEvent.setup();
+
+        const mockFunc = vi.fn();
+
+        render(<AddBlogForm submitBlog={mockFunc} />);
+
+        let author = screen.getByPlaceholderText('author');
+        let title = screen.getByPlaceholderText('title');
+        let url = screen.getByPlaceholderText('url');
+        let submitBtn =  screen.getByText('submit')
+
+        
+        await user.type(title,'react testing');
+        await user.type(author,'doe');
+        await user.type(url,'https://fullstackopen.com/en/part5/testing_react_apps#tests-for-the-togglable-component');
+
+        await user.click(submitBtn);
+        console.log(author)
+
+        console.log('this is the object->', mockFunc.mock.calls[0][0])
+        expect(mockFunc.mock.calls).toHaveLength(1);
+        expect(mockFunc.mock.calls[0][0]).toMatchObject(
+            {author:'doe',title:'react testing', url:'https://fullstackopen.com/en/part5/testing_react_apps#tests-for-the-togglable-component'}
+        )
+    })
 })
