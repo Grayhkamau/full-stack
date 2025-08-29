@@ -5,8 +5,10 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=developement node --watch index.js",
-    "test": "cross-env NODE_ENV=test node --test"
-  },
+    "test": "cross-env NODE_ENV=test node --test",
+    "E2E:test":"cross-env NODE_ENV=test node --watch index.js"
+
+},
   "author": "",
   "license": "ISC",
   "description": "",

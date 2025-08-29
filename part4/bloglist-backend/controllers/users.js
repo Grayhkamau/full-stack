@@ -4,6 +4,7 @@ const {hash_password} = require('../utils/encrypt_password');
 
 
 usersRouter.post('/', async(req,res)=>{
+    console.log('hitting the post user endpoint');
     const {username, password, name} =  req.body;
 
     if(name.length<3||password.length<3) return res.status(400).json({error:'invalid username or password'})

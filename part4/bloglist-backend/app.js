@@ -6,6 +6,8 @@ const {errorHandler, unknownEndpoint, tokenExtractor} =  require('./utils/middlw
 const {MONGODB_URL} = require('./utils/config');
 const usersRouter =  require('./controllers/users');
 const loginRouter = require('./controllers/login');
+const testRouter = require('./controllers/test');
+
 mongoose
 .connect(MONGODB_URL)
 .then(()=>console.log('mongo db connected'))
@@ -16,6 +18,10 @@ app.use(tokenExtractor)
 app.use('/api/login', loginRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/blogs', blogsRouter);
+
+if(process.env.NODE_ENV==="test"){
+    app.use('/api/test', testRouter)
+}
 
 app.use(unknownEndpoint);
 
