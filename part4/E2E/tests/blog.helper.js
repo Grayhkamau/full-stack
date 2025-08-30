@@ -12,5 +12,11 @@ const createUser = async(request)=>{
 const clearDB = async(request)=>{
     await request.post('http://localhost:3001/api/test/reset');
 }
+const loginUser = async(page,username,password)=>{
+    await page.getByLabel('username').fill(username);
+    await page.getByLabel('password').fill(password);
 
-module.exports = {createUser, clearDB}
+    await page.getByRole('button', {name:'Login in'}).click()
+}
+
+module.exports = {createUser, clearDB, loginUser}
