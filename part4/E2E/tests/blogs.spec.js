@@ -1,12 +1,19 @@
 const {test, describe, beforeEach, expect} = require("@playwright/test");
-const { createUser, clearDB, loginUser } = require("./blog.helper");
+const { createUser, clearDB, loginUser, createBlog } = require("./blog.helper");
+const { afterEach } = require("node:test");
 
 
 describe('Blogs App', ()=>{
     beforeEach(async({page,request})=>{
         await page.goto("http://localhost:5173")
+    
+        
+    })
+    afterEach(async({page,request})=>{
+        await page.goto("http://localhost:5173")
         await clearDB(request);
         await createUser(request);
+        
     })
 
     test('login form renders', async({page})=>{
@@ -19,6 +26,8 @@ describe('Blogs App', ()=>{
     })
 
     describe('logged in', ()=>{
+        // beforeEach(async({page})=>{
+        // })
         test('correct details = successful login', async({page})=>{
             await loginUser(page,'hkamau','hkamau');
 
@@ -30,20 +39,23 @@ describe('Blogs App', ()=>{
 
             await expect(page.getByText('wrong username and password')).toBeVisible();
         })
-        test.only('a new blog when logged in', async({page})=>{
+        test('a new blog when logged in', async({page})=>{
             await loginUser(page,'hkamau','hkamau');
             
-            await page.getByText('Add blogs').click();
-
-            await page.getByLabel('Title').fill('new test blog');
-
-            await page.getByLabel('Author').fill('Zack')
-
-            await page.getByLabel("url").fill('https://academind.com/tutorials/localstorage-vs-cookies-xss/')
-
-            await page.getByRole('button', {name:'create'}).click();
+            await createBlog({title:'new test blog',author:'zack',url:'https://academind.com'},page)
 
             await expect(page.getByText('new test blog')).toBeVisible()
+        })
+        test.only('a blog can be liked', async({page})=>{
+            await loginUser(page,'hkamau','hkamau');
+
+            await createBlog({title:'new test blog',author:'zack',url:'https://academind.com'},page);
+
+            await page.getByRole('button', {name:'view'}).click()
+
+            await page.getByRole('button', {name:'like'}).click();
+
+            await expect(page.getByText('likes: 1')).toBeVisible()
         })
 
     })

@@ -17,19 +17,27 @@ const AddBlogForm = ({ submitBlog }) => {
   return(
     <div>
       <form onSubmit={handleBlogSubmit}>
-        <label htmlFor="title">Title</label>;
+        <label>
+          Title
+          <input type="text" placeholder="title" name='title' value={blogDetails.title} onChange={(e) => handleBlogFormChange(e)}/>
+        </label>;
         <br/>
-        <input type="text" placeholder="title" name='title' value={blogDetails.title} onChange={(e) => handleBlogFormChange(e)}/>
         <br/>
-        <label htmlFor="author">Author</label>;
+        <label>
+          Author
+          <input type="text" placeholder="author" name="author" value={blogDetails.author} onChange={(e) => handleBlogFormChange(e)}/>  
+        </label>;
         <br/>
-        <input type="text" placeholder="author" name="author" value={blogDetails.author} onChange={(e) => handleBlogFormChange(e)}/>
+
         <br/>
-        <label htmlFor="url">URL</label>;
+        <label>
+          url
+          <input type="text" placeholder="url" name="url" value={blogDetails.url} onChange={(e) => handleBlogFormChange(e)}/>
+        </label>;
         <br/>
-        <input type="text" placeholder="url" name="url" value={blogDetails.url} onChange={(e) => handleBlogFormChange(e)}/>
+        
         <br/>
-        <button type='submit'>submit</button>
+        <button>create</button>
       </form>
     </div>
   )

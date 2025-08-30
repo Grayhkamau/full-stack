@@ -19,4 +19,17 @@ const loginUser = async(page,username,password)=>{
     await page.getByRole('button', {name:'Login in'}).click()
 }
 
-module.exports = {createUser, clearDB, loginUser}
+const createBlog = async(blog,page)=>{
+    await page.getByText('Add blogs').click();
+
+    await page.getByLabel('Title').fill(blog.title);
+
+    await page.getByLabel('Author').fill(blog.author)
+
+    await page.getByLabel("url").fill(blog.url)
+
+    await page.getByRole('button', {name:'create'}).click();
+
+    await page.getByText(blog.title, {exact:true}).waitFor();
+}
+module.exports = {createUser, clearDB, loginUser, createBlog}
