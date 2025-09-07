@@ -1,11 +1,7 @@
 
-const createUser = async(request)=>{
-    await request.post('http://localhost:3001/api/users', {
-        data:{
-            username:'hkamau',
-            password:'hkamau',
-            name:'kamau'
-        }
+const createUser = async(page, user)=>{
+    await page.request.post('http://localhost:3001/api/users', {
+        data:user
     })
 }
 

@@ -88,7 +88,8 @@ const App = () => {
       showStatus('sucess', 'blog deleted successfully')
     }
     catch(error){
-      showStatus('error', `error deleting blog: ${error.message}`)
+      showStatus('error', `error deleting blog`)
+      console.log(error)
     }
   }
   const submitBlog = async(blogDetails) => {
