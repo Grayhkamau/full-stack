@@ -62,6 +62,7 @@ blogsRouter.delete('/:id', userExtractor, async(req,res)=>{
 
 blogsRouter.put('/:id',userExtractor, async(req,res)=>{
   const id = req.params.id;
+  console.log('hitting the likes endpoint')
   
   let blog = await Blog.findById({_id:id}).populate('creator');
 
