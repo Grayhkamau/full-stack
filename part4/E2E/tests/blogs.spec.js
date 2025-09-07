@@ -19,7 +19,7 @@ describe('Blogs App', ()=>{
 
     })
     
-    describe.only('logged in', ()=>{
+    describe('logged in', ()=>{
       
         beforeEach(async({page, request})=>{
             await clearDB(request)
@@ -28,7 +28,7 @@ describe('Blogs App', ()=>{
 
         })
 
-        test('correct details = successful login',`` async({page})=>{
+        test('correct details = successful login', async({page})=>{
             await loginUser(page,'hkamau','hkamau');
 
             await expect(page.getByText('logged in sucessfully')).toBeVisible();
@@ -97,17 +97,6 @@ describe('Blogs App', ()=>{
                     await page.getByRole('button', {name:'view'}).click();
                     await expect(page.getByRole('button', {name:'Remove'})).not.toBeVisible();
 
-                    // page.on('dialog', async (dialog)=>{
-                    //     expect(dialog.type()).toBe('confirm')
-                    //     expect(dialog.message()).toBe(`remove blog ${blog.title}`)
-
-                    //     await dialog.accept()
-                    // })
-
-                    // await page.getByRole('button', {name:"Remove"}).click()
-
-                    // expect()
-
                 })
                 test('only user who added the blog can see the remove btn', async({page})=>{
                     let blog={title:'new test blog',author:'zack',url:'https://academind.com'}
@@ -118,7 +107,67 @@ describe('Blogs App', ()=>{
                     await expect(page.getByRole('button', {name:'Remove'})).toBeVisible()
                 })
 
-            })
-     })
+        })
+        describe('blogs are ordered correctly', async()=>{
+                test('based on likes', async({page,request})=>{
+                    await loginUser(page,'hkamau','hkamau');
+                    let blog={title:'test blog 1',author:'zack',url:'https://academind.com'}
+                    await createBlog(blog,page);
+                    await createBlog({...blog, title:'test blog 2'}, page);
+                    await createBlog({...blog, title:'test blog 3'}, page);
+
+                    const likeFunc = async(likes)=>{
+                        await page.getByRole('button', {name:'like',exact:true}).click();
+                        await page.getByText(`likes: ${likes}`).waitFor();
+                    }
+
+                    await page.getByRole('button', {name:'view'}).first().click()
+                                        
+                    await likeFunc(1)
+                    await likeFunc(2)
+                    await likeFunc(3)
+                  
+                    await page.getByRole('button', {name:'hide'}).first().click()
+                    
+                    await page.getByRole('button', {name:'view'}).nth(1).click()
+
+                    await likeFunc(1)
+                    await likeFunc(2)
+                    await likeFunc(3)
+                    await likeFunc(4)
+
+
+                    await page.getByRole('button', {name:'hide'}).first().click()
+
+                    await page.getByRole('button', {name:'view'}).nth(2).click();
+
+                    await likeFunc(1)
+
+                    await page.getByRole('button', {name:'hide'}).first().click()
+
+
+
+                    await page.getByRole('button', {name:'view'}).first().click();
+
+                    await expect(page.getByText('likes: 4')).toBeVisible()
+                   
+                    await page.getByRole('button', {name:'hide'}).click()
+
+                    
+                    await page.getByRole('button', {name:'view'}).nth(1).click();
+
+                    await expect(page.getByText('likes: 3')).toBeVisible()
+                   
+                    await page.getByRole('button', {name:'hide'}).click()
+
+                    
+                    await page.getByRole('button', {name:'view'}).nth(2).click();
+
+                    await expect(page.getByText('likes: 1')).toBeVisible()
+                   
+                    await page.getByRole('button', {name:'hide'}).click()
+                })
+        })
+    })
         
 })

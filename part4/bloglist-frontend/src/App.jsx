@@ -77,7 +77,7 @@ const App = () => {
       setBlogs(blogs.map(blog => blog.id===blogUpdated.id?blogUpdated:blog))
     }
     catch(error){
-      showStatus('error', `error saving blog: ${error.message}`)
+      showStatus('error', `error saving blog`)
     }
   }
 
