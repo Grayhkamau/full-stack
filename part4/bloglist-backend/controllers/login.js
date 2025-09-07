@@ -6,7 +6,8 @@ const loginRouter = require('express').Router();
 
 
 loginRouter.post('/', async(req,res)=>{
-
+    console.log('hitting the login endpoint');
+    
     let {username, password} = req.body;
 
     if(!username||!password) return res.status(400).end();

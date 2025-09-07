@@ -1,13 +1,17 @@
 
-const createUser = async(page, user)=>{
-    await page.request.post('http://localhost:3001/api/users', {
+const createUser = async(request, user)=>{
+    await request.post('http://localhost:3001/api/users', {
         data:user
     })
+
 }
 
 const clearDB = async(request)=>{
+    
     await request.post('http://localhost:3001/api/test/reset');
+
 }
+
 const loginUser = async(page,username,password)=>{
     await page.getByLabel('username').fill(username);
     await page.getByLabel('password').fill(password);

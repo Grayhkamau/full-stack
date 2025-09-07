@@ -1,29 +1,16 @@
-const {test, describe, beforeEach, expect} = require("@playwright/test");
+const {test, describe, beforeEach, expect } = require("@playwright/test");
 const { createUser, clearDB, loginUser, createBlog } = require("./blog.helper");
-const { afterEach } = require("node:test");
+
 
 
 describe('Blogs App', ()=>{
-    beforeEach(async({page, request})=>{
-        await page.goto("http://localhost:5173")
-        await createUser(page, {
-            username:'hkamau',
-            password:'hkamau',
-            name:'kamau'
-        });
-    })
-    afterEach(async({page,request})=>{
-        await page.goto("http://localhost:5173")
-        await clearDB(request);
-        await createUser(page, {
-            username:'hkamau',
-            password:'hkamau',
-            name:'kamau'
-        });
-        
-    })
+  
+    // afterEach(async({page})=>{
+    //     await clearDB(page);
+    // })
 
     test('login form renders', async({page})=>{
+    await page.goto("http://localhost:5173")
        let username = page.getByLabel('username');
        let password =  page.getByLabel('password');
        
@@ -31,10 +18,17 @@ describe('Blogs App', ()=>{
        await expect(password).toBeVisible();
 
     })
-
-    describe('logged in', ()=>{
+    
+    describe.only('logged in', ()=>{
       
-        test('correct details = successful login', async({page})=>{
+        beforeEach(async({page, request})=>{
+            await clearDB(request)
+            await createUser(request,{username:'hkamau',password:'hkamau',name:'kamau'})
+            await page.goto("http://localhost:5173")
+
+        })
+
+        test('correct details = successful login',`` async({page})=>{
             await loginUser(page,'hkamau','hkamau');
 
             await expect(page.getByText('logged in sucessfully')).toBeVisible();
@@ -50,7 +44,7 @@ describe('Blogs App', ()=>{
             
             await createBlog({title:'new test blog',author:'zack',url:'https://academind.com'},page)
 
-            await expect(page.getByText('new test blog')).toBeVisible()
+            await expect(page.getByText('new test blog', {exact:true})).toBeVisible()
         })
         test('a blog can be liked', async({page})=>{
             await loginUser(page,'hkamau','hkamau');
@@ -63,59 +57,68 @@ describe('Blogs App', ()=>{
 
             await expect(page.getByText('likes: 1')).toBeVisible()
         })
-
+   
         describe('deleting a blog', async()=>{
-            // beforeEach(async({page})=>{
-            // })
-            test.only('user who creates a blog can be able to delete it', async({page})=>{
-                await loginUser(page, "hkamau", "hkamau");
-
-                let blog={title:'new test blog',author:'zack',url:'https://academind.com'}
-                await createBlog(blog,page);
+                beforeEach(async({page})=>{
                 
-                await page.getByRole('button', {name:'view'}).click();
+                    await loginUser(page, "hkamau", "hkamau");
 
-                page.on('dialog', async (dialog)=>{
-                    expect(dialog.type()).toBe('confirm')
-                    expect(dialog.message()).toBe(`remove blog ${blog.title}`)
+                })
+            
+                test('user who creates a blog can be able to delete it', async({page})=>{
 
-                    await dialog.accept()
+                    let blog={title:'new test blog',author:'zack',url:'https://academind.com'}
+                    await createBlog(blog,page);
+                    
+                    await page.getByRole('button', {name:'view'}).click();
+
+                    page.on('dialog', async (dialog)=>{
+                        expect(dialog.type()).toBe('confirm')
+                        expect(dialog.message()).toBe(`remove blog ${blog.title}`)
+
+                        await dialog.accept()
+                    })
+
+                    await page.getByRole('button', {name:'Remove'}).click()
+
+                    await expect(page.getByText('blog deleted successfully')).toBeVisible();
                 })
 
-                await page.getByRole('button', {name:'Remove'}).click()
+                test('test fails if user did not create blog', async({page,request})=>{
 
-                await expect(page.getByText('blog deleted successfully')).toBeVisible();
-            })
+                    let blog={title:'new test blog',author:'zack',url:'https://academind.com'}
+                    await createBlog(blog,page);
 
-            test.only('test fails if user did not create blog', async({page})=>{
+                    await page.getByRole('button', {name:'Log out'}).click();
 
-                // let blog={title:'new test blog',author:'zack',url:'https://academind.com'}
-                // await createBlog(blog,page);
-                
-                
-                page.on('requestfinished', async ()=>{
+                    await createUser(request,{username:'john',password:'jjdoe',name:'jdoee'})
+
                     await loginUser(page, 'john','jjdoe');
                     await page.getByRole('button', {name:'view'}).click();
-                    expect(page.getByRole('button', {name:'Remove'})).not.toBeVisible();
+                    await expect(page.getByRole('button', {name:'Remove'})).not.toBeVisible();
+
+                    // page.on('dialog', async (dialog)=>{
+                    //     expect(dialog.type()).toBe('confirm')
+                    //     expect(dialog.message()).toBe(`remove blog ${blog.title}`)
+
+                    //     await dialog.accept()
+                    // })
+
+                    // await page.getByRole('button', {name:"Remove"}).click()
+
+                    // expect()
+
+                })
+                test('only user who added the blog can see the remove btn', async({page})=>{
+                    let blog={title:'new test blog',author:'zack',url:'https://academind.com'}
+                    await createBlog(blog,page);
+
+                    await page.getByRole('button',{name:'view'}).click();
+
+                    await expect(page.getByRole('button', {name:'Remove'})).toBeVisible()
                 })
 
-                await createUser(page,{username:'john',password:'jjdoe',name:'jdoee'})
-                
-                // page.on('dialog', async (dialog)=>{
-                //     expect(dialog.type()).toBe('confirm')
-                //     expect(dialog.message()).toBe(`remove blog ${blog.title}`)
-
-                //     await dialog.accept()
-                // })
-
-                // await page.getByRole('button', {name:"Remove"}).click()
-
-                // expect()
-
             })
-
-        })
+     })
         
-        
-    })
 })
