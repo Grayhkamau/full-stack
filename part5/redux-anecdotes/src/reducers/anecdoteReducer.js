@@ -26,7 +26,7 @@ const reducer = (state = initialState, action) => {
     case 'VOTE':
       let newState = state.map(anecdote=>anecdote.id!==action.payload.id ? anecdote : {...anecdote, votes:anecdote.votes+1
       })
-      return newState;
+      return [...newState.sort((a,b)=>{return b.votes-a.votes})];
     case 'ADD':
       return [...state,action.payload]
     default:
