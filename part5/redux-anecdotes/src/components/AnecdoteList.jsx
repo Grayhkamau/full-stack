@@ -3,7 +3,10 @@ import { voteCreator } from "../reducers/anecdoteReducer"
 
 const AnecdoteList = ()=>{
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state=>state)
+    // console.log(useSelector(state=>state.filter === 'ALL' ? state.anecdotes:state.anecdotes.filter(anecdote=>anecdote.content.includes(state.filter))))
+    const state = useSelector(state=>state)
+
+    let anecdotes = state.filter==='ALL' ? state.anecdotes : state.anecdotes.filter(anecdote=>anecdote.content.includes(state.filter))
 
     const vote = (id) => {
         dispatch(voteCreator(id))
@@ -13,12 +16,12 @@ const AnecdoteList = ()=>{
         <div>
             {anecdotes.map((anecdote)=>{
                 return(
-                    <>
+                    <div key={anecdote.id}>
                         <div>{anecdote.content}</div>
                         <div>has {anecdote.votes}
                         <   button onClick={() => vote(anecdote.id)}>vote</button>
                         </div>
-                    </> 
+                    </div> 
                 )
             })} 
         </div>
