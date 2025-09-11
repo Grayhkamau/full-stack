@@ -1,16 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const anecdotesAtStart = 
- { 
-  anecdotes:['If it hurts, do it more often',
+const anecdotesAtStart = ['If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
   'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
   'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
   'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'],
+  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.']
 
-  filter:'ALL'
-}
 
 
 
@@ -27,65 +23,34 @@ const asObject = (anecdote) => {
 
 
 
-const anecdotes = anecdotesAtStart.anecdotes.map(asObject)
+const anecdotes = anecdotesAtStart.map(asObject)
 
-const filterSlice = createSlice({
-  name:'filter',
-  initialState:'ALL',
+
+
+const anecdoteSlice = createSlice({
+  name:"anecdote",
+  initialState:anecdotes,
   reducers:{
-    createFilter(state, action){
-      let {payload} =  action;
-      let {type} = action
+    addAnecdoteCreator(state,action){
+      console.log(action)
+      let {payload} = action;
+      state.push({content:payload,id:getId(),votes:0})
+    },
+    voteCreator(state,action){
+      let {payload} = action;
 
-      switch(type){
-        case 'FILTER':
-          return payload;
-        default:
-          return state;
-      }
+      let anecdote = state.find(anecdote=>anecdote.id===payload);
+
+      anecdote.votes++;
+
+      state.sort((a,b)=>b.votes-a.votes)
+
     }
   }
 })
 
-export const anecdoteReducer = (state = anecdotes, action) => {
-  console.log('reaching anecdoteReducer')
-  switch (action.type) {
-    case 'VOTE':
-      let newState = state.map(anecdote=>anecdote.id!==action.payload.id ? anecdote : {...anecdote, votes:anecdote.votes+1
-      })
-      
-      return [...newState.sort((a,b)=>{return b.votes-a.votes})]
 
-    case 'ADD':
-      return [...state,action.payload]
 
-    default:
-      return state
-  }
-}
+export const {addAnecdoteCreator,voteCreator} = anecdoteSlice.actions;
 
-// const filterReducer = (state='ALL', action)=>{
-//   console.log('reaching filterReducer')
-
-//         switch (action.type) {
-//           case 'FILTER':
-//             return action.payload
-        
-//           default:
-//             return state
-
-//         }
-// }
-// export const filterCreator = (filter)=>{
-//   return {type:'FILTER', payload:filter}
-// }
-export const voteCreator = (id)=>{
-  return {type:'VOTE', payload:{id}}
-}
-export const addNoteCreator = (content)=>{
-  return {type:'ADD', payload:{content,id:getId(), votes:0}}
-}
-
-export const {filterCreator} = filterSlice.actions
-export default filterSlice.reducer;
-// export default {anecdoteReducer, filterReducer}
+export default anecdoteSlice.reducer;

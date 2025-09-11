@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";;
-import { addNoteCreator } from "../reducers/anecdoteReducer";
+import { addAnecdoteCreator } from "../reducers/anecdoteReducer";
 
 const AnecdoteForm = ()=>{
     const dispatch = useDispatch();
     const addNote = (e)=>{
     e.preventDefault();
 
-    dispatch(addNoteCreator(e.target.anecdote.value))
+    dispatch(addAnecdoteCreator(e.target.anecdote.value))
     e.target.anecdote.value = '';
 
   }
