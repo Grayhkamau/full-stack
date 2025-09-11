@@ -6,6 +6,7 @@ const AnecdoteList = ()=>{
     // console.log(useSelector(state=>state.filter === 'ALL' ? state.anecdotes:state.anecdotes.filter(anecdote=>anecdote.content.includes(state.filter))))
     const state = useSelector(state=>state)
 
+    console.log(useSelector(state=>state))
     let anecdotes = state.filter==='ALL' ? state.anecdotes : state.anecdotes.filter(anecdote=>anecdote.content.includes(state.filter))
 
     const vote = (id) => {

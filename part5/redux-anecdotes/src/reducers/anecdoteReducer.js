@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit"
+
 const anecdotesAtStart = 
  { 
   anecdotes:['If it hurts, do it more often',
@@ -27,8 +29,25 @@ const asObject = (anecdote) => {
 
 const anecdotes = anecdotesAtStart.anecdotes.map(asObject)
 
+const filterSlice = createSlice({
+  name:'filter',
+  initialState:'ALL',
+  reducers:{
+    createFilter(state, action){
+      let {payload} =  action;
+      let {type} = action
 
-const anecdoteReducer = (state = anecdotes, action) => {
+      switch(type){
+        case 'FILTER':
+          return payload;
+        default:
+          return state;
+      }
+    }
+  }
+})
+
+export const anecdoteReducer = (state = anecdotes, action) => {
   console.log('reaching anecdoteReducer')
   switch (action.type) {
     case 'VOTE':
@@ -45,21 +64,21 @@ const anecdoteReducer = (state = anecdotes, action) => {
   }
 }
 
-const filterReducer = (state='ALL', action)=>{
-  console.log('reaching filterReducer')
+// const filterReducer = (state='ALL', action)=>{
+//   console.log('reaching filterReducer')
 
-        switch (action.type) {
-          case 'FILTER':
-            return action.payload
+//         switch (action.type) {
+//           case 'FILTER':
+//             return action.payload
         
-          default:
-            return state
+//           default:
+//             return state
 
-        }
-}
-export const filterCreator = (filter)=>{
-  return {type:'FILTER', payload:filter}
-}
+//         }
+// }
+// export const filterCreator = (filter)=>{
+//   return {type:'FILTER', payload:filter}
+// }
 export const voteCreator = (id)=>{
   return {type:'VOTE', payload:{id}}
 }
@@ -67,4 +86,6 @@ export const addNoteCreator = (content)=>{
   return {type:'ADD', payload:{content,id:getId(), votes:0}}
 }
 
-export default {anecdoteReducer, filterReducer}
+export const {filterCreator} = filterSlice.actions
+export default filterSlice.reducer;
+// export default {anecdoteReducer, filterReducer}
