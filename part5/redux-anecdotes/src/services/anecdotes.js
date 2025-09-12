@@ -6,5 +6,10 @@ const getAll = async()=>{
     return response.data;
 }
 
+const add = async(content)=>{
+    let response = await axios.post(baseUrl,{data:{content,important:Math.random()>4}})
+console.log(response.data)
+    return response.data;
+}
 
-export default getAll
+export default {getAll,add}

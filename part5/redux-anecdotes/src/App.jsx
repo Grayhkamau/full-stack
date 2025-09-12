@@ -4,13 +4,13 @@ import AnecdoteList from './components/AnecdoteList'
 import FilterForm from './components/filterForm';
 import Notification from './components/Notification';
 import { appendNotesCreator } from './reducers/anecdoteReducer';
-import getAll from './services/anecdotes';
+import anecdoteServices from './services/anecdotes';
 import { useDispatch } from 'react-redux';
 
 const App = () => {
   const dispatch = useDispatch()
   useEffect(()=>{
-    getAll().then(data=>{
+    anecdoteServices.getAll().then(data=>{
       console.log(data)
       dispatch(appendNotesCreator(data))
     })
