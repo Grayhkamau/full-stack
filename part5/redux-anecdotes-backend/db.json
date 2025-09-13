@@ -31,60 +31,14 @@
       "votes": 0
     },
     {
-      "id": "240f",
-      "data": {
-        "content": "New anecdote",
-        "important": false
-      }
+      "id": "e236",
+      "content": "New anecdote",
+      "important": false
     },
     {
-      "id": "ae51",
-      "data": {
-        "content": "hello",
-        "important": false
-      }
-    },
-    {
-      "id": "a072",
-      "data": {
-        "content": "New anecdote",
-        "important": false
-      }
-    },
-    {
-      "id": "c9a3",
-      "data": {
-        "content": "hello",
-        "important": false
-      }
-    },
-    {
-      "id": "3323",
-      "data": {
-        "content": "hello",
-        "important": false
-      }
-    },
-    {
-      "id": "b506",
-      "data": {
-        "content": "New anecdote",
-        "important": false
-      }
-    },
-    {
-      "id": "aa0c",
-      "data": {
-        "content": "one",
-        "important": false
-      }
-    },
-    {
-      "id": "822c",
-      "data": {
-        "content": "New anecdote",
-        "important": false
-      }
+      "id": "00fe",
+      "content": "second anecdote",
+      "important": false
     }
   ]
 }

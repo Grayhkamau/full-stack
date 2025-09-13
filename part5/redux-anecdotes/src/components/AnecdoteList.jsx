@@ -22,11 +22,11 @@ const AnecdoteList = ()=>{
         <div>
             {anecdotes.map((anecdote)=>{
                 return(
-                    <div key={anecdote.id}>
-                        <div>{anecdote.content}</div>
-                        <div>has {anecdote.votes}
-                        <   button onClick={() => vote(anecdote.id)}>vote</button>
-                        </div>
+                    <div key={anecdote.id} style={{marginBottom:'10px'}}>
+                        <span>{anecdote.content}</span>
+                        <span>   has {anecdote.votes}
+                        <button onClick={() => vote(anecdote.id)}>vote</button>
+                        </span>
                     </div> 
                 )
             })} 
