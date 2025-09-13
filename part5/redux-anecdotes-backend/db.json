@@ -31,14 +31,10 @@
       "votes": 0
     },
     {
-      "id": "e236",
-      "content": "New anecdote",
-      "important": false
-    },
-    {
-      "id": "00fe",
+      "id": "279d",
       "content": "second anecdote",
-      "important": false
+      "important": false,
+      "votes": 0
     }
   ]
 }

@@ -44,8 +44,16 @@ export const {addAnecdoteCreator,voteCreator,appendNotesCreator} = anecdoteSlice
 export const initializeAnecdotes = ()=>{
   return async(dispatch)=>{
     let anecdotes = await anecdotesService.getAll()
-    console.log('response', anecdotes)
     dispatch(appendNotesCreator(anecdotes))
+  }
+}
+
+export const addAnecdote = (content)=>{
+  return async(dispatch)=>{
+    let anecdote = await anecdotesService.add(content)
+    console.log('response', anecdote)
+
+    dispatch(addAnecdoteCreator(anecdote))
   }
 }
 export default anecdoteSlice.reducer;

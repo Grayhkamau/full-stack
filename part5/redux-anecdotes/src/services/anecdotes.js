@@ -7,7 +7,7 @@ const getAll = async()=>{
 }
 
 const add = async(content)=>{
-    let response = await axios.post(baseUrl,{content,important:Math.random()>4})
+    let response = await axios.post(baseUrl,{content,important:Math.random()>4, votes:0})
 console.log(response.data)
     return response.data;
 }
