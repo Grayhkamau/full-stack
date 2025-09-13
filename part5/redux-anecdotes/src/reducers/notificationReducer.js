@@ -6,6 +6,7 @@ const notificationSlice = createSlice({
     initialState:'',
     reducers:{
         createNotification(state,action){
+            console.log('reaching')
             let {payload} = action;
             
             return payload;
@@ -16,6 +17,15 @@ const notificationSlice = createSlice({
     }
 })
 
-export const {createNotification,removeNotification} = notificationSlice.actions;
+const {createNotification,removeNotification} = notificationSlice.actions;
 
+export const notificationHelper = (notification,timer)=>{
+    return (dispatch)=>{
+        dispatch(createNotification(notification));
+
+        setTimeout(()=>{
+            dispatch(removeNotification(''))
+        },timer)
+    }
+}
 export default notificationSlice.reducer
