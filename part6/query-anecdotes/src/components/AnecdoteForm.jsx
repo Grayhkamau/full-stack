@@ -16,6 +16,12 @@ const AnecdoteForm = () => {
       client.setQueryData(['anecdotes'],[...client.getQueryData(['anecdotes']),anecdote])
       dispatch({type:'notify',payload:`anecdote: "${anecdote.content}" created`})
       setTimeout(()=>dispatch({type:''}),5000)
+    },
+    onError:({response})=>{
+
+      console.log('reaching',response.data.error)
+      dispatch({type:'notify', payload:response.data.error})
+      setTimeout(()=>dispatch({type:''}),5000)
     }
   })
 
