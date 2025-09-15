@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {Link, Routes, Route, useParams} from 'react-router-dom';
+import {Link, Routes, Route, useParams, useNavigate} from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -45,7 +45,7 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
+const CreateNew = ({addNew}) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -53,7 +53,7 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
+    addNew({
       content,
       author,
       info,
@@ -90,7 +90,6 @@ const Anecdote = ({anecdotes})=>{
   let {id} =  useParams()
 
   let anecdote = anecdotes.find((anecdote)=>anecdote.id==id);
-console.log(anecdote,id)
   return(
      <div>
       <h2>{anecdote.content}</h2>
@@ -104,6 +103,7 @@ console.log(anecdote,id)
 }
 
 const App = () => {
+  let navigate = useNavigate();
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -125,7 +125,12 @@ const App = () => {
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
-    setAnecdotes(anecdotes.concat(anecdote))
+    setAnecdotes(anecdotes.concat(anecdote));
+    navigate('/');
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(()=>{
+      setNotification('')
+    },5000)
   }
 
   const anecdoteById = (id) =>
@@ -146,6 +151,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      {notification?<p>{notification}</p>:''}
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes}/>}/>
         <Route path='/create' element={<CreateNew addNew={addNew} />}/>
